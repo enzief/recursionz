@@ -5,7 +5,7 @@ enablePlugins(ProjectPlugin)
 fork in Test in ThisBuild := true
 
 resolvers in ThisBuild ++= Seq(
-  Resolver.bintrayRepo("rbmhtechnology", "maven")
+  Resolver.sonatypeRepo("snapshots")
 )
 
 skip in publish in ThisBuild := true
