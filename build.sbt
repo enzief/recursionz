@@ -25,21 +25,21 @@ lazy val recursionz: Project = (project in file("."))
 
 addCommandAlias(
   "fmt",
-  ";scalafmtSbt;scalafmt;test:scalafmt;it:scalafmt"
+  ";scalafmtSbt;scalafmt;test:scalafmt"
 )
 
 addCommandAlias(
   "wip",
-  ";headerCreate;test:headerCreate;it:headerCreate" +
+  ";headerCreate;test:headerCreate" +
   ";fmt" +
-  ";test:compile;it:compile"
+  ";test:compile"
 )
 
 addCommandAlias(
   "check",
-  ";headerCheck;test:headerCheck;it:headerCheck" +
-  ";scalafmtCheck;test:scalafmtCheck;scalafmtSbtCheck;it:scalafmtCheck" +
-  ";evicted;test:evicted;it:evicted" +
-  ";scalafix --check;test:scalafix --check;it:scalafix --check" +
-  ";scalastyle;test:scalastyle;it:scalastyle"
+  ";headerCheck;test:headerCheck" +
+  ";scalafmtCheck;test:scalafmtCheck;scalafmtSbtCheck" +
+  ";evicted;test:evicted" +
+  ";scalafix --check;test:scalafix --check" +
+  ";scalastyle;test:scalastyle;"
 )

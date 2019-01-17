@@ -21,8 +21,8 @@ object ProjectPlugin extends AutoPlugin {
 
   override val buildSettings: Seq[Def.Setting[_]] = Seq(
     scalafixDependencies += Dependencies.scaluzzi,
-    organization := "enzief",
-    scalaVersion := "2.12.8",
+    organization     := "enzief",
+    scalaVersion     := "2.12.8",
     scalastyleConfig := file(".scalastyle-config.xml")
   )
 
@@ -71,17 +71,19 @@ object ProjectPlugin extends AutoPlugin {
   private lazy val optOptions: Seq[String] =
     if (sys.env.contains("HELM_VERSION")) {
       Seq(
-        "-opt:l:inline",
-        "-opt:l:method",
-        "-opt-inline-from:**",
-        "-opt:unreachable-code",
-        "-opt:simplify-jumps",
+        "-opt:box-unbox",
+        "-opt:closure-invocations",
         "-opt:compact-locals",
         "-opt:copy-propagation",
-        "-opt:redundant-casts",
-        "-opt:box-unbox",
         "-opt:nullness-tracking",
-        "-opt:closure-invocations",
+        "-opt:redundant-casts",
+        "-opt:simplify-jumps",
+        "-opt:unreachable-code",
+        "-opt-warnings:_",
+        "-opt:l:inline",
+        "-opt:l:method",
+        "-opt-inline-from:enzief.**:scalaz.**",
+        "-Yopt-inline-heuristics:everything",
         "-Yopt-log-inline"
       )
     } else {
