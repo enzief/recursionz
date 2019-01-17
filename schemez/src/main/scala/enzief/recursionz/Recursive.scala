@@ -16,7 +16,7 @@ package enzief.recursionz
 
 import scalaz.tc.Functor
 
-abstract class Recursive[F[_]: Functor, A] extends Recursionz[F] {
+trait Recursive[F[_], A] { _: Recursionz[F] =>
 
   def project(a: A): F[A]
 
@@ -28,13 +28,18 @@ object Recursive {
 
   def apply[F[_], A](implicit F: Recursive[F, A]): Recursive[F, A] = F
 
+  def fromCoalgebra[F[_]: Functor, A](cof: Coalgebra[F, A]): Recursive[F, A] =
+    new Recursionz[F] with Recursive[F, A] {
+      def project(a: A): F[A] = cof(a)
+    }
+
   /** Makes a `Recursive[F, T[F]` out of functor `F` and recursiveT `T` */
   def fromT[T[_[_]], F[_]](
       implicit
       F: Functor[F],
       T: RecursiveT[T, F]
   ): Recursive[F, T[F]] =
-    new Recursive[F, T[F]] {
+    new Recursionz[F] with Recursive[F, T[F]] {
       def project(a: T[F]): F[T[F]] = T.projectT(a)
     }
 
@@ -52,7 +57,7 @@ object Recursive {
 /** Special `Recursive` for any HKT `T` that has an algebra `T[F] => F[T[F]]`
   * Eg: `Fix.unfix`.
   */
-trait RecursiveT[T[_[_]], F[_]] {
+trait RecursiveT[T[_[_]], F[_]] { _: Recursionz[F] =>
   def projectT(t: T[F]): F[T[F]]
 }
 

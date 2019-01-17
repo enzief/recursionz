@@ -16,7 +16,7 @@ package enzief.recursionz
 
 import scalaz.tc.Functor
 
-abstract class Corecursive[F[_]: Functor, A] extends Recursionz[F] {
+trait Corecursive[F[_], A] { _: Recursionz[F] =>
 
   def embed(fa: F[A]): A
 
@@ -28,13 +28,18 @@ object Corecursive {
 
   def apply[F[_], A](implicit F: Corecursive[F, A]): Corecursive[F, A] = F
 
+  def fromAlgebra[F[_]: Functor, A](f: Algebra[F, A]): Corecursive[F, A] =
+    new Recursionz[F] with Corecursive[F, A] {
+      def embed(fa: F[A]): A = f(fa)
+    }
+
   /** Makes a `Corecursive[F, T[F]]` out of functor `F` and corecursiveT `T` */
   def fromT[T[_[_]], F[_]](
       implicit
       F: Functor[F],
       T: CorecursiveT[T, F]
   ): Corecursive[F, T[F]] =
-    new Corecursive[F, T[F]] {
+    new Recursionz[F] with Corecursive[F, T[F]] {
       def embed(fa: F[T[F]]): T[F] = T.embedT(fa)
     }
 
@@ -49,7 +54,11 @@ object Corecursive {
 /** Special `Corecursive` for any HKT `T` that has an coalgebra `F[T[F]] => T[F]`.
   * Eg. `Fix.apply`
   */
-trait CorecursiveT[T[_[_]], F[_]] extends Recursionz[F] {
+trait CorecursiveT[T[_[_]], F[_]] extends Recursionz[F] { _: Recursionz[F] =>
 
   def embedT(fa: F[T[F]]): T[F]
+}
+
+object CorecursiveT {
+  def apply[T[_[_]], F[_]](implicit F: CorecursiveT[T, F]): CorecursiveT[T, F] = F
 }

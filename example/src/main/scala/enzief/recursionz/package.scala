@@ -14,19 +14,7 @@
 
 package enzief.recursionz
 
-import scalaz.tc.Functor
+package object example {
 
-/** Simplest fixpoint type */
-final case class Fix[F[_]](unfix: F[Fix[F]])
-
-object Fix {
-
-  implicit def birecursive[F[_]: Functor]: Birecursive[F, Fix[F]] =
-    Birecursive.fromT[Fix, F]
-
-  implicit def birecursiveT[F[_]](implicit F: Functor[F]): BirecursiveT[Fix, F] =
-    new BirecursiveT[Fix, F] {
-      def embedT(fa:  F[Fix[F]]): Fix[F]    = Fix(fa)
-      def projectT(a: Fix[F]):    F[Fix[F]] = a.unfix
-    }
+  type Peano = Fix[PeanoF]
 }

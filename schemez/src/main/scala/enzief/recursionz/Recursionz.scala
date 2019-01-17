@@ -17,8 +17,8 @@ package enzief.recursionz
 import scalaz.Scalaz.ToFunctorOps
 import scalaz.tc.Functor
 
-trait Recursionz[F[_]] {
+abstract class Recursionz[F[_]](implicit val F: Functor[F]) {
 
-  def hylo[A, B](a: A)(f: Algebra[F, B], cof: Coalgebra[F, A])(implicit F: Functor[F]): B =
+  def hylo[A, B](a: A)(f: Algebra[F, B], cof: Coalgebra[F, A]): B =
     f(cof(a).map(hylo(_)(f, cof)))
 }

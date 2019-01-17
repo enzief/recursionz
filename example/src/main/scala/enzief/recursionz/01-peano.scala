@@ -38,7 +38,6 @@ object PeanoF {
 }
 
 object Peano {
-  type Peano = Fix[PeanoF]
 
   val zero: Peano = Fix(ZeroF())
 
