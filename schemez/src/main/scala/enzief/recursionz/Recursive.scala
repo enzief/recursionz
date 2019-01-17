@@ -16,7 +16,6 @@ package enzief.recursionz
 
 import scalaz.Scalaz.ToFunctorOps
 import scalaz.tc.Functor
-import enzief.recursionz.{ Recursive, RecursiveT }
 
 abstract class Recursive[F[_]: Functor, A] {
 
