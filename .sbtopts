@@ -1,0 +1,5 @@
+-J-server
+-J-Xmx2G
+-J-Xss16m
+-J-XX:MaxMetaspaceSize=1G
+-J-XX:ReservedCodeCacheSize=256m
