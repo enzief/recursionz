@@ -14,29 +14,41 @@
 
 package enzief.recursionz
 
+package example
+
 import scalaz.Predef.Int
 import scalaz.Scalaz._
-import scalaz.data.Maybe
-import scalaz.data.MaybeModule._
+import scalaz.tc._
 
-package object example {
-  type PeanoF[A] = Maybe[A]
-  type Peano     = Fix[PeanoF]
+sealed trait PeanoF[A]
+final case class SuccF[A](a: A) extends PeanoF[A]
+final case class ZeroF[A]() extends PeanoF[A]
+
+object PeanoF {
+
+  implicit val functor: Functor[PeanoF] = instanceOf {
+    new FunctorClass[PeanoF] {
+      def map[A, B](ma: PeanoF[A])(f: A => B): PeanoF[B] =
+        ma match {
+          case SuccF(a) => SuccF(f(a))
+          case ZeroF()  => ZeroF()
+        }
+    }
+  }
 }
 
-package example {
+object Peano {
+  type Peano = Fix[PeanoF]
 
-  object Peano {
-    val zero: Peano = Fix(Maybe.empty)
+  val zero: Peano = Fix(ZeroF())
 
-    def succ(p: Peano): Peano = Fix(Maybe.just(p))
+  def succ(p: Peano): Peano = Fix(SuccF(p))
 
-    def toInt(p: Peano): Int =
-      Recursive.fromT[Fix, PeanoF].cata(p)(count)
+  def toInt(p: Peano): Int =
+    Recursive.fromT[Fix, PeanoF].cata(p)(count)
 
-    val count: Algebra[PeanoF, Int] = {
-      case Maybe.Just(i) => 1 + i
-      case Maybe.Empty() => 0
-    }
+  val count: Algebra[PeanoF, Int] = {
+    case SuccF(i) => 1 + i
+    case ZeroF()  => 0
   }
 }
