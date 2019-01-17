@@ -26,6 +26,14 @@ abstract class Recursive[F[_]: Functor, A] extends Recursionz[F] {
 
 object Recursive {
 
+  import scalaz.Scalaz._
+  import scalaz.data.IList
+  import scalaz.data.IListModule._
+
+  def ilist[A]: Recursive[IList, A] = new Recursive[IList, A] {
+    def project(a: A): IList[A] = a :: IList.empty
+  }
+
   def apply[F[_], A](implicit F: Recursive[F, A]): Recursive[F, A] = F
 
   /** Makes a `Recursive[F, T[F]` out of functor `F` and recursiveT `T` */

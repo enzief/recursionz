@@ -26,6 +26,17 @@ abstract class Corecursive[F[_]: Functor, A] extends Recursionz[F] {
 
 object Corecursive {
 
+  import scalaz.Scalaz._
+  import scalaz.data.IList
+  import scalaz.data.IListModule._
+  import scalaz.tc.Monoid
+
+  def ilist[A](implicit A: Monoid[A]): Corecursive[IList, A] = new Corecursive[IList, A] {
+
+    def embed(fa: IList[A]): A =
+      fa.foldLeft(A.mempty)(A.mappend(_, _))
+  }
+
   def apply[F[_], A](implicit F: Corecursive[F, A]): Corecursive[F, A] = F
 
   /** Makes a `Corecursive[F, T[F]]` out of functor `F` and corecursiveT `T` */
