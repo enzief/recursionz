@@ -30,7 +30,7 @@ object Recursive {
     }
 }
 
-abstract class RecursiveT[T[_[_]], F[_]: Functor] {
+abstract class RecursiveT[T[_[_]], F[_]] {
   def projectT(t: T[F]): F[T[F]]
 }
 
