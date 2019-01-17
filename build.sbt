@@ -1,19 +1,22 @@
 import enzief.Dependencies._
 
-enablePlugins(ProjectPlugin)
-
 fork in Test in ThisBuild := true
 
 resolvers in ThisBuild ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 
-skip in publish in ThisBuild := true
-
-lazy val recursionz: Project = (project in file("."))
+lazy val root = (project in file("."))
+  .aggregate(schemez, eg)
   .enablePlugins(ProjectPlugin)
   .settings(
-    name                       := "recursionz",
+    skip in publish := true
+  )
+
+lazy val schemez: Project = (project in file("schemez"))
+  .enablePlugins(ProjectPlugin)
+  .settings(
+    name                       := "schemez",
     skip in publish            := false,
     publishArtifact in makePom := true,
     publishArtifact            := true,
@@ -21,6 +24,14 @@ lazy val recursionz: Project = (project in file("."))
       Scalaz.core,
       Testing.scalaCheck % Test
     )
+  )
+
+lazy val eg: Project = (project in file("example"))
+  .enablePlugins(ProjectPlugin)
+  .dependsOn(schemez)
+  .settings(
+    name            := "example",
+    skip in publish := true
   )
 
 addCommandAlias(
@@ -41,5 +52,5 @@ addCommandAlias(
   ";scalafmtCheck;test:scalafmtCheck;scalafmtSbtCheck" +
   ";evicted;test:evicted" +
   ";scalafix --check;test:scalafix --check" +
-  ";scalastyle;test:scalastyle;"
+  ";scalastyle;test:scalastyle"
 )
