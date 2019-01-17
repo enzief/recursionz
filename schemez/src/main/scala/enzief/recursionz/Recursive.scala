@@ -32,7 +32,8 @@ object Recursive {
 
   def apply[F[_], A](implicit F: Recursive[F, A]): Recursive[F, A] = F
 
-  implicit def fromT[T[_[_]], F[_]](
+  /** Makes a `Recursive[F, F[T[F]]]` out of functor `F` and recursiveT `T` */
+  def fromT[T[_[_]], F[_]](
       implicit
       F: Functor[F],
       T: RecursiveT[T, F]
@@ -40,9 +41,22 @@ object Recursive {
     new Recursive[F, T[F]] {
       def project(a: T[F]): F[T[F]] = T.projectT(a)
     }
+
+  /** Dot syntax */
+  implicit class Ops[A](private val a: A) extends scala.AnyVal {
+
+    def project[F[_]](implicit F: Recursive[F, A]): F[A] =
+      F.project(a)
+
+    def cata[F[_], B](f: Algebra[F, B])(implicit F: Recursive[F, A]): B =
+      F.cata(a)(f)
+  }
 }
 
-abstract class RecursiveT[T[_[_]], F[_]] {
+/** Special `Recursive` for any HKT `T` that has an algebra `T[F] => F[T[F]]`
+  * Eg: `Fix`.
+  */
+trait RecursiveT[T[_[_]], F[_]] {
   def projectT(t: T[F]): F[T[F]]
 }
 

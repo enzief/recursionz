@@ -14,10 +14,15 @@
 
 package enzief.recursionz
 
+import scalaz.tc.Functor
+
 /** Simplest fixpoint type */
 final case class Fix[F[_]](unfix: F[Fix[F]])
 
 object Fix {
+
+  implicit def recursive[F[_]: Functor]: Recursive[F, Fix[F]] =
+    Recursive.fromT[Fix, F]
 
   implicit def recursiveT[F[_]]: RecursiveT[Fix, F] =
     new RecursiveT[Fix, F] {

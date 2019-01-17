@@ -45,7 +45,7 @@ object Peano {
   def succ(p: Peano): Peano = Fix(SuccF(p))
 
   def toInt(p: Peano): Int =
-    Recursive.fromT[Fix, PeanoF].cata(p)(count)
+    Recursive[PeanoF, Peano].cata(p)(count)
 
   val count: Algebra[PeanoF, Int] = {
     case SuccF(i) => 1 + i
