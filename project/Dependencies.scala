@@ -10,7 +10,6 @@ object Dependencies {
   }
 
   object SbtPlugin {
-    val buildInfo:          ModuleID = "com.eed3si9n"      % "sbt-buildinfo"          % "0.9.0"
     val coursier:           ModuleID = "io.get-coursier"   % "sbt-coursier"           % "1.1.0-M9"
     val dynver:             ModuleID = "com.dwijnand"      % "sbt-dynver"             % "3.1.0"
     val partialUnification: ModuleID = "org.lyranthe.sbt"  % "partial-unification"    % "1.1.2"

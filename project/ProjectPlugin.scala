@@ -8,14 +8,12 @@ import de.heikoseeberger.sbtheader.HeaderPlugin, HeaderPlugin.autoImport._
 import org.scalastyle.sbt.ScalastylePlugin.autoImport.scalastyleConfig
 import sbt._
 import sbt.Keys._
-import sbtbuildinfo.BuildInfoPlugin, BuildInfoPlugin.autoImport._
 import sbtdynver.DynVerPlugin
 import scalafix.sbt.ScalafixPlugin.autoImport._
 
 object ProjectPlugin extends AutoPlugin {
 
-  override def requires: Plugins =
-    BuildInfoPlugin && HeaderPlugin && DynVerPlugin
+  override def requires: Plugins = HeaderPlugin && DynVerPlugin
 
   override def trigger = allRequirements
 
@@ -27,7 +25,6 @@ object ProjectPlugin extends AutoPlugin {
   )
 
   override val projectSettings: Seq[Def.Setting[_]] =
-    buildInfoSettings ++
     headerSettings ++
     Seq(
       conflictManager           := ConflictManager.strict,
@@ -38,19 +35,6 @@ object ProjectPlugin extends AutoPlugin {
       addCompilerPlugin(scalafixSemanticdb("4.1.0")),
       scalacOptions ++= commonScalacOptions ++ scalacOptionsFor212 ++ semanticdbOptions
     )
-
-  private lazy val buildInfoSettings: Seq[Def.Setting[_]] = Seq(
-    buildInfoKeys := Seq[BuildInfoKey](
-      name,
-      version,
-      scalaVersion,
-      sbtVersion,
-      BuildInfoKey.action("lastCommitSha")(GitPlugin.gitCommitHash)
-    ),
-    buildInfoPackage := s"${organization.value}.build",
-    buildInfoOptions += BuildInfoOption.BuildTime,
-    buildInfoOptions += BuildInfoOption.ToJson
-  )
 
   private lazy val headerSettings: Seq[Def.Setting[_]] = Seq(
     startYear := Some(2018),
@@ -142,6 +126,7 @@ object ProjectPlugin extends AutoPlugin {
       "-Xlint:type-parameter-shadow",
       "-Xlint:unsound-match",
       "-Yno-adapted-args",
+      "-Yno-imports",
       "-Ypartial-unification",
       "-Yrangepos",
       "-Ywarn-dead-code",

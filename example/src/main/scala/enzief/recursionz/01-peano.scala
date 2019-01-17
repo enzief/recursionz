@@ -14,6 +14,7 @@
 
 package enzief.recursionz
 
+import scalaz.Predef.Int
 import scalaz.Scalaz._
 import scalaz.data.Maybe
 import scalaz.data.MaybeModule._
