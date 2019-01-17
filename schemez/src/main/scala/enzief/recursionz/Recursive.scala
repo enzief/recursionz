@@ -14,18 +14,14 @@
 
 package enzief.recursionz
 
-import scalaz.Scalaz.ToFunctorOps
 import scalaz.tc.Functor
 
-abstract class Recursive[F[_]: Functor, A] {
+abstract class Recursive[F[_]: Functor, A] extends Recursionz[F] {
 
   def project(a: A): F[A]
 
   def cata[B](a: A)(f: Algebra[F, B]): B =
     hylo(a)(f, project)
-
-  def hylo[B](a: A)(f: Algebra[F, B], cof: Coalgebra[F, A]): B =
-    f(cof(a).map(hylo(_)(f, cof)))
 }
 
 object Recursive {
