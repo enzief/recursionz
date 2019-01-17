@@ -4,12 +4,6 @@ package enzief
 
 import scalaz.Scalaz.Id
 
-package recursionz {
-
-  /** Simplest fixpoint type */
-  final case class Fix[F[_]](unfix: F[Fix[F]])
-}
-
 package object recursionz {
 
   type Algebra[F[_], A]        = AlgebraM[F, Id, A]
