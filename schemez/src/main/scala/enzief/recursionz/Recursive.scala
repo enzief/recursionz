@@ -28,7 +28,7 @@ object Recursive {
 
   def apply[F[_], A](implicit F: Recursive[F, A]): Recursive[F, A] = F
 
-  /** Makes a `Recursive[F, F[T[F]]]` out of functor `F` and recursiveT `T` */
+  /** Makes a `Recursive[F, T[F]` out of functor `F` and recursiveT `T` */
   def fromT[T[_[_]], F[_]](
       implicit
       F: Functor[F],
@@ -50,7 +50,7 @@ object Recursive {
 }
 
 /** Special `Recursive` for any HKT `T` that has an algebra `T[F] => F[T[F]]`
-  * Eg: `Fix`.
+  * Eg: `Fix.unfix`.
   */
 trait RecursiveT[T[_[_]], F[_]] {
   def projectT(t: T[F]): F[T[F]]

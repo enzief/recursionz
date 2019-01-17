@@ -23,3 +23,33 @@ abstract class Corecursive[F[_]: Functor, A] extends Recursionz[F] {
   def ana[B](b: B)(cof: Coalgebra[F, B]): A =
     hylo(b)(embed, cof)
 }
+
+object Corecursive {
+
+  def apply[F[_], A](implicit F: Corecursive[F, A]): Corecursive[F, A] = F
+
+  /** Makes a `Corecursive[F, T[F]]` out of functor `F` and corecursiveT `T` */
+  def fromT[T[_[_]], F[_]](
+      implicit
+      F: Functor[F],
+      T: CorecursiveT[T, F]
+  ): Corecursive[F, T[F]] =
+    new Corecursive[F, T[F]] {
+      def embed(fa: F[T[F]]): T[F] = T.embedT(fa)
+    }
+
+  /** Dot syntax */
+  implicit class Ops[F[_], A](private val fa: F[A]) extends scala.AnyVal {
+
+    def embed(implicit F: Corecursive[F, A]): A =
+      F.embed(fa)
+  }
+}
+
+/** Special `Corecursive` for any HKT `T` that has an coalgebra `F[T[F]] => T[F]`.
+  * Eg. `Fix.apply`
+  */
+trait CorecursiveT[T[_[_]], F[_]] extends Recursionz[F] {
+
+  def embedT(fa: F[T[F]]): T[F]
+}

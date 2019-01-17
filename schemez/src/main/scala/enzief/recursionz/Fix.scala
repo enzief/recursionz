@@ -28,4 +28,12 @@ object Fix {
     new RecursiveT[Fix, F] {
       def projectT(a: Fix[F]): F[Fix[F]] = a.unfix
     }
+
+  implicit def corecursive[F[_]: Functor]: Corecursive[F, Fix[F]] =
+    Corecursive.fromT[Fix, F]
+
+  implicit def corecursiveT[F[_]]: CorecursiveT[Fix, F] =
+    new CorecursiveT[Fix, F] {
+      def embedT(fa: F[Fix[F]]): Fix[F] = Fix(fa)
+    }
 }

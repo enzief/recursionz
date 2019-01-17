@@ -47,8 +47,16 @@ object Peano {
   def toInt(p: Peano): Int =
     Recursive[PeanoF, Peano].cata(p)(count)
 
+  def fromInt(i: Int): Peano =
+    Corecursive[PeanoF, Peano].ana(i)(uncount)
+
   val count: Algebra[PeanoF, Int] = {
     case SuccF(i) => 1 + i
     case ZeroF()  => 0
+  }
+
+  val uncount: Coalgebra[PeanoF, Int] = {
+    case i if i <= 0 => ZeroF() // discard negative integers by making them 0
+    case i if i > 0  => SuccF(i - 1)
   }
 }
