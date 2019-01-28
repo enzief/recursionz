@@ -22,3 +22,7 @@ abstract class Recursionz[F[_]](implicit val F: Functor[F]) {
   def hylo[A, B](a: A)(f: Algebra[F, B], cof: Coalgebra[F, A]): B =
     f(cof(a).map(hylo(_)(f, cof)))
 }
+
+object Recursionz {
+  def apply[F[_]](implicit F: Recursionz[F]): Recursionz[F] = F
+}
