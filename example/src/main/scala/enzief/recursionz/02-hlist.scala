@@ -32,12 +32,24 @@ object ListF extends LiztInstances {
   def cons[A, L](a: A, t: L): ListF[A, L] =
     ConsF(a, t)
 
-  implicit def functor[A]: Functor[ListF[A, ?]] = instanceOf {
-    new FunctorClass[ListF[A, ?]] {
+  implicit def instance[A]: Traversable[ListF[A, ?]] = instanceOf {
+    new TraversableClass[ListF[A, ?]] {
       def map[L1, L2](ma: ListF[A, L1])(f: L1 => L2): ListF[A, L2] =
         ma match {
           case ConsF(head, tail) => ConsF(head, f(tail))
           case NilF()            => NilF()
+        }
+
+      def foldLeft[L1, L2](fa: ListF[A, L1], z: L2)(f: (L2, L1) => L2): L2 =
+        fa match {
+          case ConsF(_, t) => f(z, t)
+          case NilF()      => z
+        }
+
+      def foldRight[L1, L2](fa: ListF[A, L1], z: => L2)(f: (L1, => L2) => L2): L2 =
+        fa match {
+          case ConsF(_, t) => f(t, z)
+          case NilF()      => z
         }
     }
   }
@@ -77,7 +89,7 @@ object Lizt {
       cons(a, lz)
 
     def ++(that: Lizt[A]): Lizt[A] =
-      Recursive[ListF[A, ?], Lizt[A]].cata(lz)(Lizt.concat(that))
+      RecursiveM[ListF[A, ?], Lizt[A]].cataM(lz)(Lizt.concat(that))
 
     def map[B](f: A => B): Lizt[B] =
       Functor[Lizt].map(lz)(f)
