@@ -22,5 +22,5 @@ package object recursionz {
   type AlgebraM[F[_], M[_], A] = F[A] => M[A]
 
   type Coalgebra[F[_], A]        = CoalgebraM[F, Id, A]
-  type CoalgebraM[F[_], M[_], A] = M[A] => F[A]
+  type CoalgebraM[F[_], M[_], A] = A => F[M[A]]
 }
