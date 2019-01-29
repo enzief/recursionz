@@ -17,11 +17,10 @@ package enzief.recursionz
 import scalaz.Scalaz._
 import scalaz.tc.Monad
 import scalaz.tc.Traversable
-import scalaz.tc.syntax._
 
 trait CorecursiveM[F[_], A] { _: RecursionzM[F] =>
 
-  /** `Traversable[F]` implies `Functor[F]` so that `this` implies `Recursive[F]`.
+  /** `Traversable[F]` implies `Functor[F]` so that `this` implies `Corecursive[F]`.
     */
   val R: Corecursive[F, A]
 
@@ -33,18 +32,23 @@ object CorecursiveM {
 
   def apply[F[_], A](implicit F: CorecursiveM[F, A]): CorecursiveM[F, A] = F
 
-  def fromAlgebra[F[_]: Traversable, A](f: Algebra[F, A]): CorecursiveM[F, A] =
+  def fromAlgebra[F[_], A](
+      f: Algebra[F, A]
+  )(
+      implicit
+      F: Traversable[F]
+  ): CorecursiveM[F, A] =
     new RecursionzM[F] with CorecursiveM[F, A] {
-      val R: Corecursive[F, A] = Corecursive.fromAlgebra[F, A](f)(traversableFunctor(F))
+      val R: Corecursive[F, A] = Corecursive.fromAlgebra[F, A](f)
     }
 
-  /** Makes a `Recursive[F, T[F]` out of functor `F` and recursiveT `T` */
+  /** Makes a `CorecursiveM[F, T[F]` out of traversable `F` and corecursiveT `T` */
   def fromT[T[_[_]], F[_]](
       implicit
       F: Traversable[F],
       T: CorecursiveT[T, F]
   ): CorecursiveM[F, T[F]] =
     new RecursionzM[F] with CorecursiveM[F, T[F]] {
-      val R: Corecursive[F, T[F]] = Corecursive.fromT[T, F](traversableFunctor(F), T)
+      val R: Corecursive[F, T[F]] = Corecursive.fromT[T, F]
     }
 }

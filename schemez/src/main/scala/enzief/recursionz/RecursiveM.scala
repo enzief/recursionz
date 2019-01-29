@@ -33,19 +33,24 @@ object RecursiveM {
 
   def apply[F[_], A](implicit F: RecursiveM[F, A]): RecursiveM[F, A] = F
 
-  def fromCoalgebra[F[_]: Traversable, A](cof: Coalgebra[F, A]): RecursiveM[F, A] =
+  def fromCoalgebra[F[_], A](
+      cof: Coalgebra[F, A]
+  )(
+      implicit
+      F: Traversable[F]
+  ): RecursiveM[F, A] =
     new RecursionzM[F] with RecursiveM[F, A] {
-      val R: Recursive[F, A] = Recursive.fromCoalgebra[F, A](cof)(traversableFunctor(F))
+      val R: Recursive[F, A] = Recursive.fromCoalgebra[F, A](cof)
     }
 
-  /** Makes a `Recursive[F, T[F]` out of functor `F` and recursiveT `T` */
+  /** Makes a `RecursiveM[F, T[F]` out of traversable `F` and recursiveT `T` */
   def fromT[T[_[_]], F[_]](
       implicit
       F: Traversable[F],
       T: RecursiveT[T, F]
   ): RecursiveM[F, T[F]] =
     new RecursionzM[F] with RecursiveM[F, T[F]] {
-      val R: Recursive[F, T[F]] = Recursive.fromT[T, F](traversableFunctor(F), T)
+      val R: Recursive[F, T[F]] = Recursive.fromT[T, F]
     }
 
   /** Dot syntax */

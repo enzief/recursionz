@@ -14,7 +14,9 @@
 
 package enzief.recursionz
 
+import scalaz.Scalaz.traversableFunctor
 import scalaz.tc.Functor
+import scalaz.tc.Traversable
 
 /** Simplest fixpoint type */
 final case class Fix[F[_]](unfix: F[Fix[F]])
@@ -23,6 +25,9 @@ object Fix {
 
   implicit def birecursive[F[_]: Functor]: Birecursive[F, Fix[F]] =
     Birecursive.fromT[Fix, F]
+
+  implicit def birecursiveM[F[_]: Traversable]: BirecursiveM[F, Fix[F]] =
+    BirecursiveM.fromT[Fix, F]
 
   implicit def birecursiveT[F[_]](implicit F: Functor[F]): BirecursiveT[Fix, F] =
     new BirecursiveT[Fix, F] {
