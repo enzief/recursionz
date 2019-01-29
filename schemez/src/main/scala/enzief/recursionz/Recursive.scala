@@ -33,6 +33,8 @@ object Recursive {
       def project(a: A): F[A] = cof(a)
     }
 
+  def fromM[F[_], A](implicit F: RecursiveM[F, A]): Recursive[F, A] = F.R
+
   /** Makes a `Recursive[F, T[F]` out of functor `F` and recursiveT `T` */
   def fromT[T[_[_]], F[_]](
       implicit

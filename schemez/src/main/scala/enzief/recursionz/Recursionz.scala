@@ -28,6 +28,17 @@ class Recursionz[F[_]](implicit val F: Functor[F]) {
     */
   def hylo[A, B](a: A)(f: Algebra[F, B], cof: Coalgebra[F, A]): B =
     f(cof(a).map(hylo(_)(f, cof)))
+
+  def compose[M[_]: Monad]: Recursionz[λ[α => F[M[α]]]] =
+    new Recursionz[λ[α => F[M[α]]]]()(instanceOf(new CompositionFunctor[F, M]))
+}
+
+object Recursionz {
+  def apply[F[_]](implicit F: Recursionz[F]): Recursionz[F] = F
+
+  implicit def fromM[F[_]](implicit F: RecursionzM[F]): Recursionz[F] = F.recursionz
+
+  implicit def fromFunctor[F[_]: Functor]: Recursionz[F] = new Recursionz[F]
 }
 
 class RecursionzM[F[_]](implicit val F: Traversable[F]) {
@@ -36,21 +47,19 @@ class RecursionzM[F[_]](implicit val F: Traversable[F]) {
     */
   val recursionz: Recursionz[F] = new Recursionz[F]
 
-  def composed[M[_]: Monad]: Recursionz[λ[α => F[M[α]]]] =
-    new Recursionz[λ[α => F[M[α]]]]()(instanceOf(new CompositionFunctor[F, M]))
-
   /** A Kleisli hylomorphism.
     */
   def hyloM[M[_]: Monad, A, B](a: A)(f: AlgebraM[F, M, B], cof: CoalgebraM[F, M, A]): M[B] =
-    composed[M]
+    recursionz
+      .compose[M]
       .hylo[A, M[B]](a)(
-        _.sequence >>=  { _.sequence >>= f },
+        _.sequence >>= { _.sequence >>= f },
         cof
       )
 }
 
-object Recursionz {
-  def apply[F[_]](implicit F: Recursionz[F]): Recursionz[F] = F
+object RecursionzM {
+  def apply[F[_]](implicit F: RecursionzM[F]): RecursionzM[F] = F
 
-  def apply[F[_]](implicit F: RecursionzM[F]): Recursionz[F] = F.recursionz
+  implicit def fromTraversable[F[_]: Traversable]: RecursionzM[F] = new RecursionzM[F]
 }
