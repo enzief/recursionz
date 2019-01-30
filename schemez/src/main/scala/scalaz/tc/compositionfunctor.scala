@@ -12,15 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package enzief
+package scalaz
 
-import scalaz.Scalaz.Id
+package tc
 
-package object recursionz {
+class CompositionFunctor[F[_], G[_]](implicit F: Functor[F], G: Functor[G])
+    extends FunctorClass[λ[α => F[G[α]]]] {
 
-  type Algebra[F[_], A]        = AlgebraM[F, Id, A]
-  type AlgebraM[F[_], M[_], A] = F[A] => M[A]
-
-  type Coalgebra[F[_], A]        = CoalgebraM[F, Id, A]
-  type CoalgebraM[F[_], M[_], A] = A => F[M[A]]
+  def map[A, B](fga: F[G[A]])(f: A => B): F[G[B]] =
+    F.map(fga)(G.map(_)(f))
 }

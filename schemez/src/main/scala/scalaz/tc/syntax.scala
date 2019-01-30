@@ -12,15 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package enzief
+package scalaz
 
-import scalaz.Scalaz.Id
+package tc
 
-package object recursionz {
+object syntax {
 
-  type Algebra[F[_], A]        = AlgebraM[F, Id, A]
-  type AlgebraM[F[_], M[_], A] = F[A] => M[A]
+  implicit final class BindOps[F[_], A](private val fa: F[A]) extends scala.AnyVal {
 
-  type Coalgebra[F[_], A]        = CoalgebraM[F, Id, A]
-  type CoalgebraM[F[_], M[_], A] = A => F[M[A]]
+    def >>=[B](f: A => F[B])(implicit F: Monad[F]): F[B] =
+      F.flatMap(fa)(f)
+  }
+
+  implicit final class TraversableOps[F[_], G[_], A](private val fga: F[G[A]])
+      extends scala.AnyVal {
+
+    def sequence(implicit F: Traversable[F], G: Applicative[G]): G[F[A]] =
+      F.sequence(fga)
+  }
 }

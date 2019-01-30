@@ -28,6 +28,8 @@ object Corecursive {
 
   def apply[F[_], A](implicit F: Corecursive[F, A]): Corecursive[F, A] = F
 
+  def fromM[F[_], A](implicit F: CorecursiveM[F, A]): Corecursive[F, A] = F.R
+
   def fromAlgebra[F[_]: Functor, A](f: Algebra[F, A]): Corecursive[F, A] =
     new Recursionz[F] with Corecursive[F, A] {
       def embed(fa: F[A]): A = f(fa)
