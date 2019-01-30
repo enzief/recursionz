@@ -36,8 +36,17 @@ object ListF extends LiztInstances {
     new TraversableClass[ListF[A, ?]] {
       def map[L1, L2](ma: ListF[A, L1])(f: L1 => L2): ListF[A, L2] =
         ma match {
-          case ConsF(head, tail) => ConsF(head, f(tail))
-          case NilF()            => NilF()
+          case ConsF(h, t) => ConsF(h, f(t))
+          case NilF()      => NilF()
+        }
+
+      override def traverse[F[_], L1, L2](ta: ListF[A, L1])(f: L1 => F[L2])(
+          implicit
+          F: Applicative[F]
+      ): F[ListF[A, L2]] =
+        ta match {
+          case ConsF(h, t) => f(t).map(ConsF(h, _))
+          case NilF()      => F.pure(NilF())
         }
 
       def foldLeft[L1, L2](fa: ListF[A, L1], z: L2)(f: (L2, L1) => L2): L2 =
@@ -52,6 +61,23 @@ object ListF extends LiztInstances {
           case NilF()      => z
         }
     }
+  }
+
+  /** Put it here for implicit search.
+    */
+  implicit class Ops[A](private val lz: Lizt[A]) extends scala.AnyVal {
+
+    def ::(a: A): Lizt[A] =
+      Lizt.cons(a, lz)
+
+    def ++(that: Lizt[A]): Lizt[A] =
+      Recursive[ListF[A, ?], Lizt[A]].cata(lz)(Lizt.concat(that))
+
+    def map[B](f: A => B): Lizt[B] =
+      Functor[Lizt].map(lz)(f)
+
+    def size: Int =
+      Recursive[ListF[A, ?], Lizt[A]].cata(lz)(Lizt.size)
   }
 }
 
@@ -68,8 +94,8 @@ object Lizt {
     case NilF()      => 0
   }
 
-  def concat[A](lz: Lizt[A]): AlgebraM[ListF[A, ?], Lizt, A] = {
-    case ConsF(h, a) => h :: a :: lz
+  def concat[A](lz: Lizt[A]): Algebra[ListF[A, ?], Lizt[A]] = {
+    case ConsF(h, l) => h :: l
     case NilF()      => lz
   }
 
@@ -82,34 +108,33 @@ object Lizt {
     case ConsF(a, l) => f(a) ++ l
     case NilF()      => nil
   }
-
-  implicit class Ops[A](private val lz: Lizt[A]) extends scala.AnyVal {
-
-    def ::(a: A): Lizt[A] =
-      cons(a, lz)
-
-    def ++(that: Lizt[A]): Lizt[A] =
-      RecursiveM[ListF[A, ?], Lizt[A]].cataM(lz)(Lizt.concat(that))
-
-    def map[B](f: A => B): Lizt[B] =
-      Functor[Lizt].map(lz)(f)
-
-    def size: Int =
-      Recursive[ListF[A, ?], Lizt[A]].cata(lz)(Lizt.size)
-  }
 }
 
 trait LiztInstances {
-  import scala.Predef.???
 
   implicit def liztMonad: Monad[Lizt] = instanceOf {
     new MonadClass[Lizt] {
+
+      override def pure[A](a: A): Lizt[A] =
+        Lizt.cons(a, Lizt.nil)
+
+      override def map[A, B](ma: Lizt[A])(f: A => B): Lizt[B] =
+        ma match {
+          case Fix(ConsF(a, t)) => f(a) :: map(t)(f)
+          case Fix(NilF())      => Lizt.nil
+        }
+
       override def flatMap[A, B](ma: Lizt[A])(f: A => Lizt[B]): Lizt[B] =
-        ???
-//        ma match {
-//          case Fix(ConsF(a, t)) => Fix(ConsF(f(a), map(t)(f)))
-//          case Fix(NilF())      => Lizt.nil
-//        }
+        ma match {
+          case Fix(ConsF(a, t)) => concat(f(a), flatMap(t)(f))
+          case Fix(NilF())      => Lizt.nil
+        }
+
+      private def concat[A](l1: Lizt[A], l2: Lizt[A]): Lizt[A] =
+        l1 match {
+          case Fix(ConsF(h, t)) => h :: concat(t, l2)
+          case Fix(NilF())      => l2
+        }
     }
   }
 }
