@@ -20,6 +20,8 @@ import scalaz.Predef.Int
 import scalaz.Scalaz._
 import scalaz.tc._
 
+import enzief.recursionz.syntax._
+
 sealed trait PeanoF[A]
 final case class SuccF[A](a: A) extends PeanoF[A]
 final case class ZeroF[A]() extends PeanoF[A]
@@ -44,10 +46,10 @@ object Peano {
   def succ(p: Peano): Peano = Fix(SuccF(p))
 
   def toInt(p: Peano): Int =
-    Recursive[PeanoF, Peano].cata(p)(count)
+    p.cata(count)
 
   def fromInt(i: Int): Peano =
-    Corecursive[PeanoF, Peano].ana(i)(uncount)
+    i.ana[Peano](uncount)
 
   val count: Algebra[PeanoF, Int] = {
     case SuccF(i) => 1 + i

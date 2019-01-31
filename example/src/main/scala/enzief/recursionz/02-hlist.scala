@@ -22,6 +22,8 @@ import scalaz.Predef.Int
 import scalaz.Scalaz._
 import scalaz.tc._
 
+import enzief.recursionz.syntax._
+
 sealed trait ListF[A, L]
 final case class ConsF[A, L](head: A, tail: L) extends ListF[A, L]
 final case class NilF[A, L]() extends ListF[A, L]
@@ -95,7 +97,7 @@ object ListF extends LiztInstances {
       Lizt.cons(a, lz)
 
     def ++(that: Lizt[A]): Lizt[A] =
-      Recursive[ListFA, Lizt[A]].cata(lz)(ListF.concat(that))
+      lz.cata(ListF.concat(that))
 
     def map[B](f: A => B): Lizt[B] =
       Functor[Lizt].map(lz)(f)
@@ -104,13 +106,13 @@ object ListF extends LiztInstances {
       Monad[Lizt].flatMap(lz)(f)
 
     def reduce(implicit A: Semigroup[A]): Maybe[A] =
-      Recursive[ListFA, Lizt[A]].cata(lz)(ListF.reduce[A])
+      lz.cata(ListF.reduce[A])
 
     def reverse: Lizt[A] =
-      Recursive[ListFA, Lizt[A]].cata(lz)(ListF.reverse[A])
+      lz.cata(ListF.reverse[A])
 
     def size: Int =
-      Recursive[ListFA, Lizt[A]].cata(lz)(ListF.size)
+      lz.cata(ListF.size[A])
   }
 }
 
