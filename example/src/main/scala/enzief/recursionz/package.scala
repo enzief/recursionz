@@ -16,5 +16,6 @@ package enzief.recursionz
 
 package object example {
 
-  type Peano = Fix[PeanoF]
+  type Peano   = Fix[PeanoF]
+  type Lizt[A] = Fix[ListF[A, ?]]
 }
