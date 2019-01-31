@@ -18,6 +18,11 @@ package tc
 
 object syntax {
 
+  implicit final class IdOps[A](private val a: A) extends scala.AnyVal {
+
+    def squared: (A, A) = (a, a)
+  }
+
   implicit final class BindOps[F[_], A](private val fa: F[A]) extends scala.AnyVal {
 
     def >>=[B](f: A => F[B])(implicit F: Monad[F]): F[B] =

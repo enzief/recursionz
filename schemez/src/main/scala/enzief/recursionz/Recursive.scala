@@ -14,7 +14,9 @@
 
 package enzief.recursionz
 
+import scalaz.Scalaz._
 import scalaz.tc.Functor
+import scalaz.tc.syntax.IdOps
 
 trait Recursive[F[_], A] { _: Recursionz[F] =>
 
@@ -22,6 +24,10 @@ trait Recursive[F[_], A] { _: Recursionz[F] =>
 
   def cata[B](a: A)(f: Algebra[F, B]): B =
     hylo(a)(f, project)
+
+  def para[B](a: A)(f: GAlgebra[F, (A, ?), B]): B =
+    compose[(A, ?)]
+      .hylo[A, B](a)(f, project(_).map(_.squared))
 }
 
 object Recursive {
