@@ -16,7 +16,6 @@ package enzief.recursionz
 
 import scalaz.Scalaz._
 import scalaz.tc._
-import scalaz.tc.syntax._
 
 class Recursionz[F[_]](implicit val F: Functor[F]) {
 
@@ -44,34 +43,4 @@ object Recursionz {
 
   implicit def compose[F[_]: Recursionz, G[_]: Functor]: Recursionz[λ[α => F[G[α]]]] =
     Recursionz[F].compose[G]
-}
-
-class RecursionzM[F[_]](implicit val F: Traversable[F]) {
-
-  /** `Traversable[F]` implies `Functor[F]` so that `this` implies `Recursionz[F]`.
-    */
-  val recursionz: Recursionz[F] = new Recursionz[F]
-
-  /** A Kleisli hylomorphism.
-    */
-  def hyloM[M[_]: Monad, A, B](a: A)(f: AlgebraM[F, M, B], cof: CoalgebraM[F, M, A]): M[B] =
-    recursionz
-      .compose[M]
-      .hylo[A, M[B]](a)(
-        _.sequence >>= { _.sequence >>= f },
-        cof
-      )
-
-  def compose[G[_]: Traversable]: RecursionzM[λ[α => F[G[α]]]] =
-    new RecursionzM[λ[α => F[G[α]]]]()(instanceOf(new CompositionTraversableClass[F, G]))
-}
-
-object RecursionzM {
-  def apply[F[_]](implicit F: RecursionzM[F]): RecursionzM[F] = F
-
-  implicit def fromTraversable[F[_]: Traversable]: RecursionzM[F] =
-    new RecursionzM[F]
-
-  implicit def compose[F[_]: RecursionzM, G[_]: Traversable]: RecursionzM[λ[α => F[G[α]]]] =
-    RecursionzM[F].compose[G]
 }
