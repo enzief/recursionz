@@ -32,11 +32,17 @@ class Recursionz[F[_]](implicit val F: Functor[F]) {
     new Recursionz[λ[α => F[G[α]]]]()(instanceOf(new CompositionFunctorClass[F, G]))
 }
 
-object Recursionz {
+object Recursionz extends RecursionzInstances0 {
   def apply[F[_]](implicit F: Recursionz[F]): Recursionz[F] = F
+}
+
+sealed trait RecursionzInstances0 extends RecursionzInstances1 {
 
   implicit def fromM[F[_]](implicit F: RecursionzM[F]): Recursionz[F] =
     F.recursionz
+}
+
+sealed trait RecursionzInstances1 {
 
   implicit def fromFunctor[F[_]: Functor]: Recursionz[F] =
     new Recursionz[F]

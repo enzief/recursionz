@@ -37,26 +37,18 @@ object RecursiveM {
       cof: Coalgebra[F, A]
   )(
       implicit
-      F: Traversable[F]
+      F: Traversable[F] // named as F is mandatory for better implicit shadowing
   ): RecursiveM[F, A] =
     new RecursionzM[F] with RecursiveM[F, A] {
       val R: Recursive[F, A] = Recursive.fromCoalgebra[F, A](cof)
     }
 
   /** Makes a `RecursiveM[F, T[F]` out of traversable `F` and recursiveT `T` */
-  def fromT[T[_[_]], F[_]](
+  def fromT[T[_[_]], F[_]](T: RecursiveT[T, F])(
       implicit
-      F: Traversable[F],
-      T: RecursiveT[T, F]
+      F: Traversable[F] // named as F is mandatory for better implicit shadowing
   ): RecursiveM[F, T[F]] =
     new RecursionzM[F] with RecursiveM[F, T[F]] {
-      val R: Recursive[F, T[F]] = Recursive.fromT[T, F]
+      val R: Recursive[F, T[F]] = Recursive.fromT[T, F](T)
     }
-
-  /** Dot syntax */
-  implicit class Ops[A](private val a: A) extends scala.AnyVal {
-
-    def cataM[F[_], M[_]: Monad, B](f: AlgebraM[F, M, B])(implicit F: RecursiveM[F, A]): M[B] =
-      F.cataM(a)(f)
-  }
 }
