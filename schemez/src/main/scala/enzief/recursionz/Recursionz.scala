@@ -30,15 +30,20 @@ class Recursionz[F[_]](implicit val F: Functor[F]) {
     f(cof(a).map(hylo(_)(f, cof)))
 
   def compose[G[_]: Functor]: Recursionz[λ[α => F[G[α]]]] =
-    new Recursionz[λ[α => F[G[α]]]]()(instanceOf(new CompositionFunctor[F, G]))
+    new Recursionz[λ[α => F[G[α]]]]()(instanceOf(new CompositionFunctorClass[F, G]))
 }
 
 object Recursionz {
   def apply[F[_]](implicit F: Recursionz[F]): Recursionz[F] = F
 
-  implicit def fromM[F[_]](implicit F: RecursionzM[F]): Recursionz[F] = F.recursionz
+  implicit def fromM[F[_]](implicit F: RecursionzM[F]): Recursionz[F] =
+    F.recursionz
 
-  implicit def fromFunctor[F[_]: Functor]: Recursionz[F] = new Recursionz[F]
+  implicit def fromFunctor[F[_]: Functor]: Recursionz[F] =
+    new Recursionz[F]
+
+  implicit def compose[F[_]: Recursionz, G[_]: Functor]: Recursionz[λ[α => F[G[α]]]] =
+    Recursionz[F].compose[G]
 }
 
 class RecursionzM[F[_]](implicit val F: Traversable[F]) {
@@ -56,10 +61,17 @@ class RecursionzM[F[_]](implicit val F: Traversable[F]) {
         _.sequence >>= { _.sequence >>= f },
         cof
       )
+
+  def compose[G[_]: Traversable]: RecursionzM[λ[α => F[G[α]]]] =
+    new RecursionzM[λ[α => F[G[α]]]]()(instanceOf(new CompositionTraversableClass[F, G]))
 }
 
 object RecursionzM {
   def apply[F[_]](implicit F: RecursionzM[F]): RecursionzM[F] = F
 
-  implicit def fromTraversable[F[_]: Traversable]: RecursionzM[F] = new RecursionzM[F]
+  implicit def fromTraversable[F[_]: Traversable]: RecursionzM[F] =
+    new RecursionzM[F]
+
+  implicit def compose[F[_]: RecursionzM, G[_]: Traversable]: RecursionzM[λ[α => F[G[α]]]] =
+    RecursionzM[F].compose[G]
 }
