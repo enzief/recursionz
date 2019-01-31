@@ -29,8 +29,8 @@ class Recursionz[F[_]](implicit val F: Functor[F]) {
   def hylo[A, B](a: A)(f: Algebra[F, B], cof: Coalgebra[F, A]): B =
     f(cof(a).map(hylo(_)(f, cof)))
 
-  def compose[M[_]: Monad]: Recursionz[λ[α => F[M[α]]]] =
-    new Recursionz[λ[α => F[M[α]]]]()(instanceOf(new CompositionFunctor[F, M]))
+  def compose[G[_]: Functor]: Recursionz[λ[α => F[G[α]]]] =
+    new Recursionz[λ[α => F[G[α]]]]()(instanceOf(new CompositionFunctor[F, G]))
 }
 
 object Recursionz {
