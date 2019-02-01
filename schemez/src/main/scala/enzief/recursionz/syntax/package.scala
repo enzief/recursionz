@@ -20,13 +20,13 @@ import typeclass.Monad
 
 object syntax {
 
-  implicit class recursionz[A](private val a: A) extends AnyVal {
+  implicit final class recursionz[A](private val a: A) extends AnyVal {
 
     def hylo[F[_], B](f: Algebra[F, B], cof: Coalgebra[F, A])(implicit F: Recursionz[F]): B =
       F.hylo(a)(f, cof)
   }
 
-  implicit class recursionzM[A](private val a: A) extends AnyVal {
+  implicit final class recursionzM[A](private val a: A) extends AnyVal {
 
     def hyloM[F[_], M[_]: Monad, B](
         f:   AlgebraM[F, M, B],
@@ -37,7 +37,7 @@ object syntax {
       F.hyloM(a)(f, cof)
   }
 
-  implicit class recursive[A](private val a: A) extends AnyVal {
+  implicit final class recursive[A](private val a: A) extends AnyVal {
 
     def project[F[_]](implicit F: Recursive[F, A]): F[A] =
       F.project(a)
@@ -49,13 +49,13 @@ object syntax {
       F.para(a)(f)
   }
 
-  implicit class recursiveM[A](private val a: A) extends AnyVal {
+  implicit final class recursiveM[A](private val a: A) extends AnyVal {
 
     def cataM[F[_], M[_]: Monad, B](f: AlgebraM[F, M, B])(implicit F: RecursiveM[F, A]): M[B] =
       F.cataM(a)(f)
   }
 
-  implicit class corecursive[B](private val b: B) extends AnyVal {
+  implicit final class corecursive[B](private val b: B) extends AnyVal {
     import scalaz.prop.===
 
     def embed[F[_], A](implicit I: B === F[A], F: Corecursive[F, A]): A =
@@ -64,18 +64,18 @@ object syntax {
     def ana[A]: AnaSyntax[B, A] = new AnaSyntax[B, A](b)
   }
 
-  class AnaSyntax[B, A](private val b: B) extends AnyVal {
+  final class AnaSyntax[B, A](private val b: B) extends AnyVal {
 
     def apply[F[_]](cof: Coalgebra[F, B])(implicit F: Corecursive[F, A]): A =
       F.ana(b)(cof)
   }
 
-  implicit class corecursiveM[B](private val b: B) extends AnyVal {
+  implicit final class corecursiveM[B](private val b: B) extends AnyVal {
 
     def anaM[A]: AnaMSyntax[B, A] = new AnaMSyntax[B, A](b)
   }
 
-  class AnaMSyntax[B, A](private val b: B) extends AnyVal {
+  final class AnaMSyntax[B, A](private val b: B) extends AnyVal {
 
     def apply[F[_], M[_]: Monad](cof: CoalgebraM[F, M, B])(implicit F: CorecursiveM[F, A]): M[A] =
       F.anaM(b)(cof)

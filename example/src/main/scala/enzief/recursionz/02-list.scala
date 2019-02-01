@@ -89,8 +89,8 @@ object ListF extends LiztInstances {
     }
   }
 
-  implicit def birecursive[A]: Birecursive[ListF[A, ?], Lizt[A]] =
-    Fix.birecursive[ListF[A, ?]]
+  implicit def birecursiveM[A]: BirecursiveM[ListF[A, ?], Lizt[A]] =
+    Fix.birecursiveM[ListF[A, ?]]
 
   /** Put it here for implicit search.
     */
