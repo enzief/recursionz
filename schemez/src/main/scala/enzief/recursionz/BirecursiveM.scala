@@ -42,12 +42,11 @@ object BirecursiveM {
     }
 
   /** Makes a `BirecursiveM[F, T[F]]` out of traversable `F` and birecursiveT `T` */
-  def fromT[T[_[_]], F[_]](
+  def fromT[T[_[_]], F[_]](T: BirecursiveT[T, F])(
       implicit
-      F: Traversable[F],
-      T: BirecursiveT[T, F]
+      F: Traversable[F]
   ): BirecursiveM[F, T[F]] =
     new BirecursiveM[F, T[F]] {
-      override val R: Birecursive[F, T[F]] = Birecursive.fromT[T, F]
+      override val R: Birecursive[F, T[F]] = Birecursive.fromT[T, F](T)
     }
 }

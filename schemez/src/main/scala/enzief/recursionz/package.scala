@@ -18,6 +18,8 @@ import scalaz.Scalaz.Id
 
 package object recursionz {
 
+  type Fix[F[_]] = Fix.impl.Fix[F]
+
   type Algebra[F[_], A]        = AlgebraM[F, Id, A]
   type AlgebraM[F[_], M[_], A] = F[A] => M[A]
   type GAlgebra[F[_], W[_], A] = F[W[A]] => A

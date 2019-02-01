@@ -12,26 +12,56 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package enzief.recursionz
+package enzief
+
+package recursionz
 
 import typeclass.Functor
 import typeclass.Traversable
 import typeclass.coherent.traversableFunctor
 
 /** Simplest fixpoint type */
-final case class Fix[F[_]](unfix: F[Fix[F]])
+// shamelessly copied and modified from Scalaz 8
+trait FixModule {
+  type Fix[F[_]]
+
+  def fix[F[_]](f: F[recursionz.Fix[F]]): Fix[F]
+
+  def unfix[F[_]](f: Fix[F]): F[recursionz.Fix[F]]
+
+  def subst[F[_[_[_]]]](f: F[λ[G[_] => G[recursionz.Fix[G]]]]): F[Fix]
+}
 
 object Fix {
 
-  implicit def birecursive[F[_]: Functor]: Birecursive[F, Fix[F]] =
-    Birecursive.fromT[Fix, F]
+  private[recursionz] val impl: FixModule = new FixModule {
+    type Fix[F[_]] = F[recursionz.Fix[F]]
 
-  implicit def birecursiveM[F[_]: Traversable]: BirecursiveM[F, Fix[F]] =
-    BirecursiveM.fromT[Fix, F]
+    def fix[F[_]](f: F[recursionz.Fix[F]]): Fix[F] = f
 
-  implicit def birecursiveT[F[_]](implicit F: Functor[F]): BirecursiveT[Fix, F] =
+    def unfix[F[_]](f: Fix[F]): F[recursionz.Fix[F]] = f
+
+    def subst[F[_[_[_]]]](f: F[λ[G[_] => G[recursionz.Fix[G]]]]): F[Fix] = f
+  }
+
+  def apply[F[_]](f: F[Fix[F]]): Fix[F] =
+    impl.fix(f)
+
+  def unapply[F[_]](f: Fix[F]): scala.Option[F[Fix[F]]] =
+    scala.Some(impl.unfix(f))
+
+  def subst[F[_[_[_]]]](f: F[λ[G[_] => G[Fix[G]]]]): F[Fix] =
+    impl.subst(f)
+
+  def birecursive[F[_]: Functor]: Birecursive[F, Fix[F]] =
+    Birecursive.fromT[Fix, F](birecursiveT)
+
+  def birecursiveM[F[_]: Traversable]: BirecursiveM[F, Fix[F]] =
+    BirecursiveM.fromT[Fix, F](birecursiveT)
+
+  def birecursiveT[F[_]](implicit F: Functor[F]): BirecursiveT[Fix, F] =
     new BirecursiveT[Fix, F] {
       def embedT(fa:  F[Fix[F]]): Fix[F]    = Fix(fa)
-      def projectT(a: Fix[F]):    F[Fix[F]] = a.unfix
+      def projectT(a: Fix[F]):    F[Fix[F]] = impl.unfix(a)
     }
 }

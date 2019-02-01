@@ -44,12 +44,11 @@ object CorecursiveM {
     }
 
   /** Makes a `CorecursiveM[F, T[F]` out of traversable `F` and corecursiveT `T` */
-  def fromT[T[_[_]], F[_]](
+  def fromT[T[_[_]], F[_]](T: CorecursiveT[T, F])(
       implicit
-      F: Traversable[F],
-      T: CorecursiveT[T, F]
+      F: Traversable[F]
   ): CorecursiveM[F, T[F]] =
     new RecursionzM[F] with CorecursiveM[F, T[F]] {
-      val R: Corecursive[F, T[F]] = Corecursive.fromT[T, F]
+      val R: Corecursive[F, T[F]] = Corecursive.fromT[T, F](T)
     }
 }

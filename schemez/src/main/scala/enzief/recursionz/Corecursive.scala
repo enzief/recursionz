@@ -28,7 +28,7 @@ object Corecursive {
 
   def apply[F[_], A](implicit F: Corecursive[F, A]): Corecursive[F, A] = F
 
-  def fromM[F[_], A](implicit F: CorecursiveM[F, A]): Corecursive[F, A] = F.R
+  implicit def fromM[F[_], A](implicit F: CorecursiveM[F, A]): Corecursive[F, A] = F.R
 
   def fromAlgebra[F[_]: Functor, A](f: Algebra[F, A]): Corecursive[F, A] =
     new Recursionz[F] with Corecursive[F, A] {
@@ -36,21 +36,13 @@ object Corecursive {
     }
 
   /** Makes a `Corecursive[F, T[F]]` out of functor `F` and corecursiveT `T` */
-  def fromT[T[_[_]], F[_]](
+  def fromT[T[_[_]], F[_]](T: CorecursiveT[T, F])(
       implicit
-      F: Functor[F],
-      T: CorecursiveT[T, F]
+      F: Functor[F]
   ): Corecursive[F, T[F]] =
     new Recursionz[F] with Corecursive[F, T[F]] {
       def embed(fa: F[T[F]]): T[F] = T.embedT(fa)
     }
-
-  /** Dot syntax */
-  implicit class Ops[F[_], A](private val fa: F[A]) extends scala.AnyVal {
-
-    def embed(implicit F: Corecursive[F, A]): A =
-      F.embed(fa)
-  }
 }
 
 /** Special `Corecursive` for any HKT `T` that has an coalgebra `F[T[F]] => T[F]`.

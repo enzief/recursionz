@@ -36,6 +36,9 @@ object PeanoF {
         }
     }
   }
+
+  implicit val birecursive: Birecursive[PeanoF, Peano] =
+    Fix.birecursive[PeanoF]
 }
 
 object Peano {

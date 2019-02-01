@@ -89,6 +89,9 @@ object ListF extends LiztInstances {
     }
   }
 
+  implicit def birecursive[A]: Birecursive[ListF[A, ?], Lizt[A]] =
+    Fix.birecursive[ListF[A, ?]]
+
   /** Put it here for implicit search.
     */
   implicit class Ops[A](private val lz: Lizt[A]) extends scala.AnyVal {
@@ -127,6 +130,10 @@ object Lizt {
 }
 
 trait LiztInstances {
+  // https://github.com/scala/bug/issues/11389
+  // remove import when it's fixed
+  // appearently it works with 2.13.x
+  import ListF.Ops
 
   implicit def liztMonad:       Monad[Lizt]       = Monad(instances)
   implicit def liztTraversable: Traversable[Lizt] = Traversable(instances)
@@ -173,7 +180,7 @@ trait LiztInstances {
           F: Applicative[F]
       ): F[Lizt[B]] =
         ma match {
-          case Fix(ConsF(a, t)) => f(a).liftA2(traverse(t)(f))(_ :: _)
+          case Fix(ConsF(a, t)) => f(a).liftA2(traverse(t)(f))(Lizt.cons)
           case Fix(NilF())      => F.pure(Lizt.nil[B])
         }
     }

@@ -30,12 +30,10 @@ object Birecursive {
       def project(a: A):    F[A] = cof(a)
     }
 
+  implicit def fromM[F[_], A](implicit F: BirecursiveM[F, A]): Birecursive[F, A] = F.R
+
   /** Makes a `Birecursive[F, T[F]]` out of functor `F` and birecursiveT `T` */
-  def fromT[T[_[_]], F[_]](
-      implicit
-      F: Functor[F],
-      T: BirecursiveT[T, F]
-  ): Birecursive[F, T[F]] =
+  def fromT[T[_[_]], F[_]: Functor](T: BirecursiveT[T, F]): Birecursive[F, T[F]] =
     new Birecursive[F, T[F]] {
       def embed(fa:  F[T[F]]): T[F]    = T.embedT(fa)
       def project(a: T[F]):    F[T[F]] = T.projectT(a)
