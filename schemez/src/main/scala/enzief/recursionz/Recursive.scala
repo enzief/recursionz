@@ -14,9 +14,9 @@
 
 package enzief.recursionz
 
-import scalaz.Scalaz._
-import scalaz.tc.Functor
-import scalaz.tc.syntax.IdOps
+import typeclass.Functor
+import typeclass.coherent._
+import typeclass.syntax._
 
 trait Recursive[F[_], A] { _: Recursionz[F] =>
 

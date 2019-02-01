@@ -14,7 +14,7 @@
 
 package enzief.recursionz
 
-import scalaz.tc.Functor
+import typeclass.Functor
 
 abstract class Birecursive[F[_], A](implicit F: Functor[F])
     extends Recursionz[F]

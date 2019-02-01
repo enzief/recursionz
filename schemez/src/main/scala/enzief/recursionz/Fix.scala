@@ -14,9 +14,9 @@
 
 package enzief.recursionz
 
-import scalaz.Scalaz.traversableFunctor
-import scalaz.tc.Functor
-import scalaz.tc.Traversable
+import typeclass.Functor
+import typeclass.Traversable
+import typeclass.coherent.traversableFunctor
 
 /** Simplest fixpoint type */
 final case class Fix[F[_]](unfix: F[Fix[F]])

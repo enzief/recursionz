@@ -19,10 +19,11 @@ package example
 import scalaz.data.Maybe
 import scalaz.data.MaybeModule._
 import scalaz.Predef.Int
-import scalaz.Scalaz._
-import scalaz.tc._
 
 import enzief.recursionz.syntax._
+import enzief.recursionz.typeclass._
+import enzief.recursionz.typeclass.coherent._
+import enzief.recursionz.typeclass.syntax._
 
 sealed trait ListF[A, L]
 final case class ConsF[A, L](head: A, tail: L) extends ListF[A, L]
@@ -56,9 +57,9 @@ object ListF extends LiztInstances {
     case NilF()      => Lizt.nil
   }
 
-  implicit def instances[A]: Traversable[ListF[A, ?]] = instanceOf {
+  implicit def instances[A]: Traversable[ListF[A, ?]] = Traversable {
     type ListFA[B] = ListF[A, B]
-    new TraversableClass[ListFA] {
+    new impl.Traversable[ListFA] {
       def map[L1, L2](ma: ListFA[L1])(f: L1 => L2): ListFA[L2] =
         ma match {
           case ConsF(h, t) => ConsF(h, f(t))
@@ -127,11 +128,11 @@ object Lizt {
 
 trait LiztInstances {
 
-  implicit def liztMonad:       Monad[Lizt]       = instanceOf(instances)
-  implicit def liztTraversable: Traversable[Lizt] = instanceOf(instances)
+  implicit def liztMonad:       Monad[Lizt]       = Monad(instances)
+  implicit def liztTraversable: Traversable[Lizt] = Traversable(instances)
 
-  implicit def monoid[A]: Monoid[Lizt[A]] = instanceOf {
-    new MonoidClass[Lizt[A]] {
+  implicit def monoid[A]: Monoid[Lizt[A]] = Monoid {
+    new impl.Monoid[Lizt[A]] {
 
       def mempty: Lizt[A] = Lizt.nil
 
@@ -140,8 +141,8 @@ trait LiztInstances {
     }
   }
 
-  private val instances: MonadClass[Lizt] with TraversableClass[Lizt] =
-    new MonadClass[Lizt] with TraversableClass[Lizt] {
+  private val instances: impl.Monad[Lizt] with impl.Traversable[Lizt] =
+    new impl.Monad[Lizt] with impl.Traversable[Lizt] {
 
       override def map[A, B](ma: Lizt[A])(f: A => B): Lizt[B] =
         ma match {

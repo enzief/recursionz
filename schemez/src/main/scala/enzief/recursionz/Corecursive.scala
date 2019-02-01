@@ -14,7 +14,7 @@
 
 package enzief.recursionz
 
-import scalaz.tc.Functor
+import typeclass.Functor
 
 trait Corecursive[F[_], A] { _: Recursionz[F] =>
 

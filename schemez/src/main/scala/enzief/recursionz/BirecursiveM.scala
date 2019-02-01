@@ -14,8 +14,8 @@
 
 package enzief.recursionz
 
-import scalaz.Scalaz._
-import scalaz.tc.Traversable
+import typeclass.Traversable
+import typeclass.coherent.traversableFunctor
 
 abstract class BirecursiveM[F[_], A](implicit F: Traversable[F])
     extends RecursionzM[F]

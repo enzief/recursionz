@@ -14,10 +14,10 @@
 
 package enzief.recursionz
 
-import scalaz.Scalaz._
-import scalaz.tc.Monad
-import scalaz.tc.Traversable
-import scalaz.tc.syntax._
+import typeclass.Monad
+import typeclass.Traversable
+import typeclass.coherent._
+import typeclass.syntax._
 
 trait RecursiveM[F[_], A] { _: RecursionzM[F] =>
 

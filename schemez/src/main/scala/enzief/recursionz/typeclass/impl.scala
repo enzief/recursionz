@@ -12,27 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package scalaz
+package enzief.recursionz
 
-package tc
+package typeclass
 
-object syntax {
+import scalaz.{tc => z}
 
-  implicit final class IdOps[A](private val a: A) extends scala.AnyVal {
+package object impl {
 
-    def squared: (A, A) = (a, a)
-  }
-
-  implicit final class BindOps[F[_], A](private val fa: F[A]) extends scala.AnyVal {
-
-    def >>=[B](f: A => F[B])(implicit F: Monad[F]): F[B] =
-      F.flatMap(fa)(f)
-  }
-
-  implicit final class TraversableOps[F[_], G[_], A](private val fga: F[G[A]])
-      extends scala.AnyVal {
-
-    def sequence(implicit F: Traversable[F], G: Applicative[G]): G[F[A]] =
-      F.sequence(fga)
-  }
+  type Functor[F[_]]     = z.FunctorClass[F]
+  type Monad[F[_]]       = z.MonadClass[F]
+  type Monoid[A]         = z.MonoidClass[A]
+  type Traversable[F[_]] = z.TraversableClass[F]
 }

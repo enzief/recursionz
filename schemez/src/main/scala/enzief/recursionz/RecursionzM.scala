@@ -14,9 +14,9 @@
 
 package enzief.recursionz
 
-import scalaz.Scalaz._
-import scalaz.tc._
-import scalaz.tc.syntax._
+import typeclass._
+import typeclass.coherent._
+import typeclass.syntax._
 
 class RecursionzM[F[_]](implicit val F: Traversable[F]) {
 
@@ -35,7 +35,7 @@ class RecursionzM[F[_]](implicit val F: Traversable[F]) {
       )
 
   def compose[G[_]: Traversable]: RecursionzM[λ[α => F[G[α]]]] =
-    new RecursionzM[λ[α => F[G[α]]]]()(instanceOf(new CompositionTraversableClass[F, G]))
+    new RecursionzM[λ[α => F[G[α]]]]()(F.compose[G])
 }
 
 object RecursionzM {

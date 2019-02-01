@@ -14,8 +14,9 @@
 
 package enzief.recursionz
 
-import scalaz.Scalaz._
-import scalaz.tc._
+import typeclass._
+import typeclass.coherent._
+import typeclass.syntax._
 
 class Recursionz[F[_]](implicit val F: Functor[F]) {
 
@@ -29,7 +30,7 @@ class Recursionz[F[_]](implicit val F: Functor[F]) {
     f(cof(a).map(hylo(_)(f, cof)))
 
   def compose[G[_]: Functor]: Recursionz[λ[α => F[G[α]]]] =
-    new Recursionz[λ[α => F[G[α]]]]()(instanceOf(new CompositionFunctorClass[F, G]))
+    new Recursionz[λ[α => F[G[α]]]]()(F.compose[G])
 }
 
 object Recursionz extends RecursionzInstances0 {

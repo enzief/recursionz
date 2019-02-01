@@ -16,7 +16,7 @@ package enzief.recursionz
 
 import scala.AnyVal
 
-import scalaz.tc.Monad
+import typeclass.Monad
 
 object syntax {
 

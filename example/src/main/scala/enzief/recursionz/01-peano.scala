@@ -17,10 +17,9 @@ package enzief.recursionz
 package example
 
 import scalaz.Predef.Int
-import scalaz.Scalaz._
-import scalaz.tc._
 
 import enzief.recursionz.syntax._
+import enzief.recursionz.typeclass._
 
 sealed trait PeanoF[A]
 final case class SuccF[A](a: A) extends PeanoF[A]
@@ -28,8 +27,8 @@ final case class ZeroF[A]() extends PeanoF[A]
 
 object PeanoF {
 
-  implicit val functor: Functor[PeanoF] = instanceOf {
-    new FunctorClass[PeanoF] {
+  implicit val functor: Functor[PeanoF] = Functor {
+    new impl.Functor[PeanoF] {
       def map[A, B](ma: PeanoF[A])(f: A => B): PeanoF[B] =
         ma match {
           case SuccF(a) => SuccF(f(a))
