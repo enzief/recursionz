@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package enzief.recursionz
+package scalaz
 
-package typeclass
+package tc
 
-import scalaz.{tc => z}
+trait ApplicativeErrorClass[F[_], S] extends ApplicativeClass[F] { self =>
+  def raiseError[A](e: S): F[A]
 
-package object impl {
+  def handleError[A](fa: F[A])(f: S => F[A]): F[A]
+}
 
-  type Functor[F[_]]     = z.FunctorClass[F]
-  type Monad[F[_]]       = z.MonadClass[F]
-  type Monoid[A]         = z.MonoidClass[A]
-  type Traversable[F[_]] = z.TraversableClass[F]
-
-  type ApplicativeError[F[_], E] = z.ApplicativeErrorClass[F, E]
+object ApplicativeError {
+  type ApplicativeError[F[_], E] = InstanceOf[ApplicativeErrorClass[F, E]]
+  @inline def apply[F[_], S](implicit F: ApplicativeError[F, S]): ApplicativeError[F, S] = F
 }

@@ -16,14 +16,19 @@ package enzief.recursionz
 
 package typeclass
 
-import scalaz.{tc => z}
+object instances {
 
-package object impl {
+  implicit def either[E]: ApplicativeError[Either[E, ?], E] = ApplicativeError {
+    new impl.ApplicativeError[Either[E, ?], E] {
 
-  type Functor[F[_]]     = z.FunctorClass[F]
-  type Monad[F[_]]       = z.MonadClass[F]
-  type Monoid[A]         = z.MonoidClass[A]
-  type Traversable[F[_]] = z.TraversableClass[F]
+      def raiseError[A](e: E): Either[E, A] =
+        Left(e)
 
-  type ApplicativeError[F[_], E] = z.ApplicativeErrorClass[F, E]
+      def handleError[A](fa: Either[E, A])(f: E => Either[E, A]): Either[E, A] =
+        fa match {
+          case Right(_) => fa
+          case Left(e)  => f(e)
+        }
+    }
+  }
 }

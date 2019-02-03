@@ -30,6 +30,8 @@ package object typeclass {
   type Semigroup[A]      = z.Semigroup[A]
   type Traversable[F[_]] = z.Traversable[F]
 
+  type ApplicativeError[F[_], E] = z.ApplicativeError.ApplicativeError[F, E]
+
   final def Applicative[F[_]](implicit F: Applicative[F]): Applicative[F] = F
   final def Apply[F[_]](implicit F:       Apply[F]):       Apply[F]       = F
   final def Bind[F[_]](implicit F:        Bind[F]):        Bind[F]        = F
@@ -42,8 +44,16 @@ package object typeclass {
   final def Semigroup[A](implicit A:      Semigroup[A]):   Semigroup[A]   = A
   final def Traversable[F[_]](implicit F: Traversable[F]): Traversable[F] = F
 
+  final def ApplicativeError[F[_], E](
+      implicit F: ApplicativeError[F, E]
+  ): ApplicativeError[F, E] =
+    F
+
   final def Functor[F[_]](F:     impl.Functor[F]):     Functor[F]     = z.instanceOf(F)
   final def Monad[F[_]](F:       impl.Monad[F]):       Monad[F]       = z.instanceOf(F)
   final def Monoid[A](A:         impl.Monoid[A]):      Monoid[A]      = z.instanceOf(A)
   final def Traversable[F[_]](F: impl.Traversable[F]): Traversable[F] = z.instanceOf(F)
+
+  final def ApplicativeError[F[_], E](F: impl.ApplicativeError[F, E]): ApplicativeError[F, E] =
+    z.instanceOf(F)
 }

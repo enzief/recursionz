@@ -31,6 +31,12 @@ trait Coherent0 extends Coherent1 {
 }
 
 trait Coherent1 {
+
   implicit def traversableFunctor[T[_]](implicit T: Traversable[T]): Functor[T] = instanceOf(T)
   implicit def applicativeApply[M[_]](implicit M:   Applicative[M]): Apply[M]   = instanceOf(M)
+
+  implicit def applicativeErrorApplicative[F[_], E](
+      implicit F: ApplicativeError[F, E]
+  ): Applicative[F] =
+    instanceOf(F)
 }

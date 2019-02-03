@@ -37,6 +37,18 @@ object syntax
     def squared: (A, A) = (a, a)
   }
 
+  implicit final class OptionOps[A](private val a: Option[A]) extends AnyVal {
+
+    def liftTo[F[_]]: OptionSyntax[F, A] =
+      new OptionSyntax(a)
+  }
+
+  final class OptionSyntax[F[_], A](private val a: Option[A]) extends AnyVal {
+
+    def apply[E](e: E)(implicit F: ApplicativeError[F, E]): F[A] =
+      a.map(F.pure).getOrElse(F.raiseError(e))
+  }
+
   implicit final class FunctorExn[F[_]](private val F: Functor[F]) extends AnyVal {
 
     def compose[G[_]](implicit G: Functor[G]): Functor[λ[α => F[G[α]]]] =
