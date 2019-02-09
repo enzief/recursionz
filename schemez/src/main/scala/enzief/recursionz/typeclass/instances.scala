@@ -16,6 +16,10 @@ package enzief.recursionz
 
 package typeclass
 
+import scala.util.Either
+import scala.util.Left
+import scala.util.Right
+
 object instances {
 
   implicit def either[E]: ApplicativeError[Either[E, ?], E] = ApplicativeError {

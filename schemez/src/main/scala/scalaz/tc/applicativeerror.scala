@@ -16,6 +16,8 @@ package scalaz
 
 package tc
 
+import scala.inline
+
 trait ApplicativeErrorClass[F[_], S] extends ApplicativeClass[F] { self =>
   def raiseError[A](e: S): F[A]
 

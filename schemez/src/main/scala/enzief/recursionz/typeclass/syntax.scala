@@ -17,6 +17,7 @@ package enzief.recursionz
 package typeclass
 
 import scala.AnyVal
+import scala.Option
 
 import scalaz.{tc => z}
 
