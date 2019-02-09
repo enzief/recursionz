@@ -36,6 +36,8 @@ object syntax
   implicit final class IdOps[A](private val a: A) extends AnyVal {
 
     def squared: (A, A) = (a, a)
+
+    def |>[B](f: A => B): B = f(a)
   }
 
   implicit final class OptionOps[A](private val a: Option[A]) extends AnyVal {
