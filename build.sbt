@@ -6,17 +6,19 @@ resolvers in ThisBuild ++= Seq(
   Resolver.sonatypeRepo("snapshots")
 )
 
-lazy val root = (project in file("."))
-  .aggregate(schemez, eg)
+lazy val root: Project = (project in file("."))
+  .aggregate(scalaz, eg)
   .enablePlugins(ProjectPlugin)
   .settings(
     skip in publish := true
   )
 
-lazy val schemez: Project = (project in file("schemez"))
+lazy val scalaz: Project = (project in file("scalaz"))
   .enablePlugins(ProjectPlugin)
   .settings(
-    name                       := "schemez",
+    schemez(Compile, "main"),
+    schemez(Test, "test"),
+    name                       := "schemez-scalaz",
     skip in publish            := false,
     publishArtifact in makePom := true,
     publishArtifact            := true,
@@ -26,9 +28,16 @@ lazy val schemez: Project = (project in file("schemez"))
     )
   )
 
+def schemez(scope: Configuration, path: String): Setting[Seq[File]] =
+  scope / unmanagedSourceDirectories += (
+    baseDirectory
+      .in(scope)
+      .value / s"../schemez/src/$path/scala"
+  ).getCanonicalFile
+
 lazy val eg: Project = (project in file("example"))
   .enablePlugins(ProjectPlugin)
-  .dependsOn(schemez)
+  .dependsOn(scalaz)
   .settings(
     name            := "example",
     skip in publish := true

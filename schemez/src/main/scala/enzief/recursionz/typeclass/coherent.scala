@@ -16,8 +16,6 @@ package enzief.recursionz
 
 package typeclass
 
-import scalaz.tc.instanceOf
-
 object coherent extends Coherent0
 
 trait Coherent0 extends Coherent1 {

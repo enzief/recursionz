@@ -55,7 +55,7 @@ object syntax
   implicit final class FunctorExn[F[_]](private val F: Functor[F]) extends AnyVal {
 
     def compose[G[_]](implicit G: Functor[G]): Functor[λ[α => F[G[α]]]] =
-      Functor[λ[α => F[G[α]]]](new z.CompositionFunctorClass[F, G]()(F, G))
+      instanceOf(new z.CompositionFunctorClass[F, G]()(F, G))
   }
 
   implicit final class BindOps[F[_], A](private val fa: F[A]) extends AnyVal {
@@ -73,6 +73,6 @@ object syntax
   implicit final class TraversableExn[F[_]](private val F: Traversable[F]) extends AnyVal {
 
     def compose[G[_]](implicit G: Traversable[G]): Traversable[λ[α => F[G[α]]]] =
-      Traversable[λ[α => F[G[α]]]](new z.CompositionTraversableClass[F, G]()(F, G))
+      instanceOf(new z.CompositionTraversableClass[F, G]()(F, G))
   }
 }

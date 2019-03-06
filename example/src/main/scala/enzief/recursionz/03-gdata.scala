@@ -36,7 +36,7 @@ case class RawString[A](x:   String) extends RawData[A]
 
 object RawData {
 
-  implicit val instances: Traversable[RawData] = Traversable {
+  implicit val instances: Traversable[RawData] = instanceOf {
     new impl.Traversable[RawData] {
       def map[A, B](ma: RawData[A])(f: A => B): RawData[B] =
         ma match {

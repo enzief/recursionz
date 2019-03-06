@@ -27,7 +27,7 @@ final case class ZeroF[A]() extends PeanoF[A]
 
 object PeanoF {
 
-  implicit val functor: Functor[PeanoF] = Functor {
+  implicit val functor: Functor[PeanoF] = instanceOf {
     new impl.Functor[PeanoF] {
       def map[A, B](ma: PeanoF[A])(f: A => B): PeanoF[B] =
         ma match {

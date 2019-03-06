@@ -14,23 +14,7 @@
 
 package enzief.recursionz
 
-import scalaz.{tc => z}
-
-package object typeclass {
-
-  type Applicative[F[_]] = z.Applicative[F]
-  type Apply[F[_]]       = z.Apply[F]
-  type Bind[F[_]]        = z.Bind[F]
-  type Cobind[F[_]]      = z.Cobind[F]
-  type Comonad[F[_]]     = z.Comonad[F]
-  type Foldable[F[_]]    = z.Foldable[F]
-  type Functor[F[_]]     = z.Functor[F]
-  type Monad[F[_]]       = z.Monad[F]
-  type Monoid[A]         = z.Monoid[A]
-  type Semigroup[A]      = z.Semigroup[A]
-  type Traversable[F[_]] = z.Traversable[F]
-
-  type ApplicativeError[F[_], E] = z.ApplicativeError.ApplicativeError[F, E]
+package object typeclass extends TypeclassDefs {
 
   final def Applicative[F[_]](implicit F: Applicative[F]): Applicative[F] = F
   final def Apply[F[_]](implicit F:       Apply[F]):       Apply[F]       = F
@@ -48,12 +32,4 @@ package object typeclass {
       implicit F: ApplicativeError[F, E]
   ): ApplicativeError[F, E] =
     F
-
-  final def Functor[F[_]](F:     impl.Functor[F]):     Functor[F]     = z.instanceOf(F)
-  final def Monad[F[_]](F:       impl.Monad[F]):       Monad[F]       = z.instanceOf(F)
-  final def Monoid[A](A:         impl.Monoid[A]):      Monoid[A]      = z.instanceOf(A)
-  final def Traversable[F[_]](F: impl.Traversable[F]): Traversable[F] = z.instanceOf(F)
-
-  final def ApplicativeError[F[_], E](F: impl.ApplicativeError[F, E]): ApplicativeError[F, E] =
-    z.instanceOf(F)
 }

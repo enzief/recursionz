@@ -57,7 +57,7 @@ object ListF extends LiztInstances {
     case NilF()      => Lizt.nil
   }
 
-  implicit def instances[A]: Traversable[ListF[A, ?]] = Traversable {
+  implicit def instances[A]: Traversable[ListF[A, ?]] = instanceOf {
     type ListFA[B] = ListF[A, B]
     new impl.Traversable[ListFA] {
       def map[L1, L2](ma: ListFA[L1])(f: L1 => L2): ListFA[L2] =
@@ -135,10 +135,10 @@ trait LiztInstances {
   // appearently it works with 2.13.x
   import ListF.Ops
 
-  implicit def liztMonad:       Monad[Lizt]       = Monad(instances)
-  implicit def liztTraversable: Traversable[Lizt] = Traversable(instances)
+  implicit def liztMonad:       Monad[Lizt]       = instanceOf(instances)
+  implicit def liztTraversable: Traversable[Lizt] = instanceOf(instances)
 
-  implicit def monoid[A]: Monoid[Lizt[A]] = Monoid {
+  implicit def monoid[A]: Monoid[Lizt[A]] = instanceOf {
     new impl.Monoid[Lizt[A]] {
 
       def mempty: Lizt[A] = Lizt.nil

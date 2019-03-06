@@ -16,14 +16,26 @@ package enzief.recursionz
 
 package typeclass
 
+import scala.inline
+
 import scalaz.{tc => z}
 
-package object impl {
+trait TypeclassDefs {
 
-  type Functor[F[_]]     = z.FunctorClass[F]
-  type Monad[F[_]]       = z.MonadClass[F]
-  type Monoid[A]         = z.MonoidClass[A]
-  type Traversable[F[_]] = z.TraversableClass[F]
+  @inline
+  final def instanceOf[T](t: T): z.InstanceOf[T] = z.instanceOf(t)
 
-  type ApplicativeError[F[_], E] = z.ApplicativeErrorClass[F, E]
+  type Applicative[F[_]] = z.Applicative[F]
+  type Apply[F[_]]       = z.Apply[F]
+  type Bind[F[_]]        = z.Bind[F]
+  type Cobind[F[_]]      = z.Cobind[F]
+  type Comonad[F[_]]     = z.Comonad[F]
+  type Foldable[F[_]]    = z.Foldable[F]
+  type Functor[F[_]]     = z.Functor[F]
+  type Monad[F[_]]       = z.Monad[F]
+  type Monoid[A]         = z.Monoid[A]
+  type Semigroup[A]      = z.Semigroup[A]
+  type Traversable[F[_]] = z.Traversable[F]
+
+  type ApplicativeError[F[_], E] = z.ApplicativeError.ApplicativeError[F, E]
 }
