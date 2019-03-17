@@ -16,23 +16,4 @@ package enzief.recursionz
 
 package typeclass
 
-import scala.util.Either
-import scala.util.Left
-import scala.util.Right
-
-object instances {
-
-  implicit def either[E]: ApplicativeError[Either[E, ?], E] = instanceOf {
-    new impl.ApplicativeError[Either[E, ?], E] {
-
-      def raiseError[A](e: E): Either[E, A] =
-        Left(e)
-
-      def handleError[A](fa: Either[E, A])(f: E => Either[E, A]): Either[E, A] =
-        fa match {
-          case Right(_) => fa
-          case Left(e)  => f(e)
-        }
-    }
-  }
-}
+object instances {}

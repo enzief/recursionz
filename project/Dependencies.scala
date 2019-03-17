@@ -28,7 +28,7 @@ object Dependencies {
 
   object Scalaz {
     val org:     String = "org.scalaz"
-    val version: String = "74f3868b+20190306-0156-SNAPSHOT"
+    val version: String = "ffd844c7+20190317-2220-SNAPSHOT"
 
     val core: ModuleID = org %% "scalaz-base" % version
   }

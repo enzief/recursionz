@@ -52,12 +52,6 @@ object syntax
       a.map(F.pure).getOrElse(F.raiseError(e))
   }
 
-  implicit final class FunctorExn[F[_]](private val F: Functor[F]) extends AnyVal {
-
-    def compose[G[_]](implicit G: Functor[G]): Functor[λ[α => F[G[α]]]] =
-      instanceOf(new z.CompositionFunctorClass[F, G]()(F, G))
-  }
-
   implicit final class BindOps[F[_], A](private val fa: F[A]) extends AnyVal {
 
     def >>=[B](f: A => F[B])(implicit F: Monad[F]): F[B] =
@@ -68,11 +62,5 @@ object syntax
 
     def sequence(implicit F: Traversable[F], G: Applicative[G]): G[F[A]] =
       F.sequence(fga)
-  }
-
-  implicit final class TraversableExn[F[_]](private val F: Traversable[F]) extends AnyVal {
-
-    def compose[G[_]](implicit G: Traversable[G]): Traversable[λ[α => F[G[α]]]] =
-      instanceOf(new z.CompositionTraversableClass[F, G]()(F, G))
   }
 }
