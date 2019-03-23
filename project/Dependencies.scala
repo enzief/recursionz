@@ -31,5 +31,11 @@ object Dependencies {
     val version: String = "ffd844c7+20190317-2220-SNAPSHOT"
 
     val core: ModuleID = org %% "scalaz-base" % version
+
+    object Testz {
+      val version: String = "0.0.5"
+
+      val testz: ModuleID = "org.scalaz" %% "testz-stdlib" % version
+    }
   }
 }

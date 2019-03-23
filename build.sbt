@@ -7,7 +7,7 @@ resolvers in ThisBuild ++= Seq(
 )
 
 lazy val root: Project = (project in file("."))
-  .aggregate(scalaz, eg)
+  .aggregate(scalaz, eg, testz)
   .enablePlugins(ProjectPlugin)
   .settings(
     skip in publish := true
@@ -23,8 +23,7 @@ lazy val scalaz: Project = (project in file("scalaz"))
     publishArtifact in makePom := true,
     publishArtifact            := true,
     libraryDependencies ++= Seq(
-      Scalaz.core,
-      Testing.scalaCheck % Test
+      Scalaz.core
     )
   )
 
@@ -41,6 +40,18 @@ lazy val eg: Project = (project in file("example"))
   .settings(
     name            := "example",
     skip in publish := true
+  )
+
+lazy val testz: Project = (project in file("testz"))
+  .enablePlugins(ProjectPlugin)
+  .dependsOn(eg, scalaz)
+  .settings(
+    name            := "testz",
+    skip in publish := true,
+    libraryDependencies ++= Seq(
+      Scalaz.Testz.testz,
+      Testing.scalaCheck
+    )
   )
 
 addCommandAlias(
