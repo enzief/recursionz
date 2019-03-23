@@ -40,26 +40,28 @@ object ProjectPlugin extends AutoPlugin {
     startYear := Some(2018),
     licenses  := Nil,
     headerLicense := Some(
-      HeaderLicense.Custom("""Copyright (c) 2019 Yui Pham.
-                             |
-                             |Licensed under the Apache License, Version 2.0 (the "License");
-                             |you may not use this file except in compliance with the License.
-                             |You may obtain a copy of the License at
-                             |
-                             |http://www.apache.org/licenses/LICENSE-2.0
-                             |
-                             |Unless required by applicable law or agreed to in writing, software
-                             |"distributed under the License is distributed on an "AS IS" BASIS,
-                             |WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-                             |See the License for the specific language governing permissions and
-                             |limitations under the License.
-                             |""".stripMargin)
-    ),
+        HeaderLicense.Custom(
+          """Copyright (c) 2019 Yui Pham.
+            |
+            |Licensed under the Apache License, Version 2.0 (the "License");
+            |you may not use this file except in compliance with the License.
+            |You may obtain a copy of the License at
+            |
+            |http://www.apache.org/licenses/LICENSE-2.0
+            |
+            |Unless required by applicable law or agreed to in writing, software
+            |"distributed under the License is distributed on an "AS IS" BASIS,
+            |WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+            |See the License for the specific language governing permissions and
+            |limitations under the License.
+            |""".stripMargin
+        )
+      ),
     headerMappings := headerMappings.value ++ Map(
-      FileType("sbt")      -> HeaderCommentStyle.cppStyleLineComment,
-      HeaderFileType.java  -> HeaderCommentStyle.cppStyleLineComment,
-      HeaderFileType.scala -> HeaderCommentStyle.cppStyleLineComment
-    )
+        FileType("sbt")      -> HeaderCommentStyle.cppStyleLineComment,
+        HeaderFileType.java  -> HeaderCommentStyle.cppStyleLineComment,
+        HeaderFileType.scala -> HeaderCommentStyle.cppStyleLineComment
+      )
   )
 
   // See https://docs.scala-lang.org/overviews/compiler-options/index.html

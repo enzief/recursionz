@@ -23,16 +23,16 @@ lazy val scalaz: Project = (project in file("scalaz"))
     publishArtifact in makePom := true,
     publishArtifact            := true,
     libraryDependencies ++= Seq(
-      Scalaz.core
-    )
+        Scalaz.core
+      )
   )
 
 def schemez(scope: Configuration, path: String): Setting[Seq[File]] =
   scope / unmanagedSourceDirectories += (
-    baseDirectory
-      .in(scope)
-      .value / s"../schemez/src/$path/scala"
-  ).getCanonicalFile
+      baseDirectory
+        .in(scope)
+        .value / s"../schemez/src/$path/scala"
+    ).getCanonicalFile
 
 lazy val eg: Project = (project in file("example"))
   .enablePlugins(ProjectPlugin)
@@ -49,9 +49,9 @@ lazy val testz: Project = (project in file("testz"))
     name            := "testz",
     skip in publish := true,
     libraryDependencies ++= Seq(
-      Scalaz.Testz.testz,
-      Testing.scalaCheck
-    )
+        Scalaz.Testz.testz,
+        Testing.scalaCheck
+      )
   )
 
 addCommandAlias(
