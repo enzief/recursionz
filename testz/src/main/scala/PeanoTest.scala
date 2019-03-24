@@ -18,21 +18,33 @@ package test
 
 import scalaz.tc.EqSyntax
 
+import enzief.recursionz.example.Peano
+import enzief.recursionz.example.Peano._
+import enzief.recursionz.example.PeanoF.eqp
 import enzief.recursionz.syntax._
 
 import testz._
 
 object PeanoTest extends EqSyntax {
-  import example.Peano._
 
   def tests[A](harness: Harness[A]): A = {
     import harness._
 
-    namedSection("Peano number") {
+    val three = succ(succ(succ(zero)))
+
+    section(
       test("cata into integer") { () =>
-        val three = succ(succ(succ(zero)))
         assert(three.cata(count) === 3)
       },
-    }
+      test("ana from integer") { () =>
+        assert(4.ana[Peano](uncount) === succ(three))
+      },
+      test("cata zero") { () =>
+        assert(zero.cata(count) === 0)
+      },
+      test("ana zero") { () =>
+        assert(0.ana[Peano](uncount) === zero)
+      }
+    )
   }
 }

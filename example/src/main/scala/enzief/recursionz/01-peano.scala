@@ -39,6 +39,8 @@ object PeanoF {
 
   implicit val birecursive: Birecursive[PeanoF, Peano] =
     Fix.birecursive[PeanoF]
+
+  implicit val eqp: Eq[Peano] = impl.Eq.fromEquals
 }
 
 object Peano {

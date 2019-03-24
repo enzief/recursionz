@@ -32,9 +32,9 @@ import testz.runner._
 object Main {
 
   def printReport(scope: List[String], out: Result): List[String] =
-    "\n" :: (out match {
-      case _: Succeed => s"[${green("OK")}]\n" :: (scope :+ green(" > "))
-      case _: Fail    => s"[${red("KO")}]\n" :: (scope :+ red(" > "))
+    (out match {
+      case _: Succeed => s"\n[${green("OK")}]" :: green(" > ") :: scope
+      case _: Fail    => s"\n[${red("KO")}]" :: red(" > ") :: scope
     })
 
   def green(s: String): String = s"$GREEN$s$RESET"
@@ -48,7 +48,7 @@ object Main {
   def suites(harness: Harness[PureHarness.Uses[Unit]]): List[() => Future[TestOutput]] =
     tests(harness).map {
       case (name, suite) =>
-        () => Future.successful(suite((), List(name)))
+        () => Future.successful(suite((), name :: Nil))
     }
 
   def tests[T](harness: Harness[T]): List[(String, T)] =
@@ -57,6 +57,6 @@ object Main {
 
   def main(args: Array[String]): Unit = {
     val result = Await.result(runner(suites(harness), print, global), Duration.Inf)
-    if (result.failed) throw /* scalafix:ok */ new Exception("some tests failed")
+    if (result.failed) throw /* scalafix:ok */ new Exception /* scalafix:ok */ ("some tests failed")
   }
 }

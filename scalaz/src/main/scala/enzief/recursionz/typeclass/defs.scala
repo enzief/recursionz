@@ -25,6 +25,8 @@ trait TypeclassDefs {
   @inline
   final def instanceOf[T](t: T): z.InstanceOf[T] = z.instanceOf(t)
 
+  type Eq[A] = z.Eq[A]
+
   type Applicative[F[_]]         = z.Applicative[F]
   type ApplicativeError[F[_], E] = z.ApplicativeError[F, E]
   type Apply[F[_]]               = z.Apply[F]

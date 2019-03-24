@@ -20,6 +20,9 @@ import scalaz.{tc => z}
 
 object impl {
 
+  type Eq[A] = z.EqClass[A]
+  val Eq = z.Eq
+
   type Functor[F[_]]     = z.FunctorClass[F]
   type Monad[F[_]]       = z.MonadClass[F]
   type Monoid[A]         = z.MonoidClass[A]

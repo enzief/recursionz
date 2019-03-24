@@ -16,6 +16,8 @@ package enzief.recursionz
 
 package object typeclass extends TypeclassDefs {
 
+  final def Eq[A](implicit A: Eq[A]): Eq[A] = A
+
   final def Applicative[F[_]](implicit F: Applicative[F]): Applicative[F] = F
   final def Apply[F[_]](implicit F:       Apply[F]):       Apply[F]       = F
   final def Bind[F[_]](implicit F:        Bind[F]):        Bind[F]        = F
