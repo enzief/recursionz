@@ -52,7 +52,8 @@ object Main {
     }
 
   def tests[T](harness: Harness[T]): List[(String, T)] =
-    "Peano" -> PeanoTest.tests(harness) ::
+    "Peano"   -> PeanoTest.tests(harness) ::
+    "RawData" -> RawDataTest.tests(harness) ::
     Nil
 
   def main(args: Array[String]): Unit = {

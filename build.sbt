@@ -50,6 +50,7 @@ lazy val testz: Project = (project in file("testz"))
     skip in publish := true,
     libraryDependencies ++= Seq(
         Scalaz.Testz.testz,
+        Scalaz.laws,
         Testing.scalaCheck
       )
   )

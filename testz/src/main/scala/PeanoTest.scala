@@ -20,7 +20,7 @@ import scalaz.tc.EqSyntax
 
 import enzief.recursionz.example.Peano
 import enzief.recursionz.example.Peano._
-import enzief.recursionz.example.PeanoF.eqp
+import enzief.recursionz.example.PeanoF.eql
 import enzief.recursionz.syntax._
 
 import testz._
