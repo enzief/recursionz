@@ -39,18 +39,12 @@ object RawDataTest extends EqSyntax {
         TraversableLaws.traverseComposition(RawInt(100): RawData[Int])(
           i => Option(i.toString),
           (_: String) => () :: Nil
-        ) { (x, y) =>
-          assert(x === y)
-        }
+        )((x, y) => assert(x === y))
       },
       test("idetity law") { () =>
         TraversableLaws.traverseIdentity(
           RawList("123" :: "dsf" :: Nil): RawData[String]
-        ) { (x, y) =>
-          scala.Predef.println(x)
-          scala.Predef.println(y)
-          assert(x === y)
-        }
+        )((x, y) => assert(x === y))
       }
     )
   }
