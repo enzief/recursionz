@@ -32,7 +32,7 @@ object ProjectPlugin extends AutoPlugin {
       autoAPIMappings in Global := true,
       addCompilerPlugin(Dependencies.CompilerPlugin.kindProjector),
       addCompilerPlugin(Dependencies.CompilerPlugin.monadicFor),
-      addCompilerPlugin(scalafixSemanticdb("4.1.10")),
+      addCompilerPlugin(scalafixSemanticdb("4.1.11")),
       scalacOptions ++= commonScalacOptions ++ scalacOptionsFor212 ++ semanticdbOptions
     )
 
