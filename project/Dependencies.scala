@@ -5,7 +5,7 @@ import sbt._
 object Dependencies {
 
   object CompilerPlugin {
-    val kindProjector: ModuleID = "org.spire-math" %% "kind-projector"     % "0.9.9"
+    val kindProjector: ModuleID = "org.typelevel" %% "kind-projector"     % "0.10.0"
     val monadicFor:    ModuleID = "com.olegpy"     %% "better-monadic-for" % "0.3.0"
   }
 
