@@ -11,7 +11,7 @@ object Dependencies {
 
   object SbtPlugin {
     val coursier:           ModuleID = "io.get-coursier"   % "sbt-coursier"           % "1.1.0-M13-3"
-    val dynver:             ModuleID = "com.dwijnand"      % "sbt-dynver"             % "3.3.0"
+    val dynver:             ModuleID = "com.dwijnand"      % "sbt-dynver"             % "4.1.0"
     val partialUnification: ModuleID = "org.lyranthe.sbt"  % "partial-unification"    % "1.1.2"
     val sbtHeader:          ModuleID = "de.heikoseeberger" % "sbt-header"             % "5.2.0"
     val scalafix:           ModuleID = "ch.epfl.scala"     % "sbt-scalafix"           % "0.9.4"
