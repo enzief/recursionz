@@ -14,16 +14,15 @@
 
 package enzief
 
-import scalaz.Scalaz.Id
-
 package object recursionz {
 
   type Fix[F[_]] = Fix.impl.Fix[F]
 
-  type Algebra[F[_], A]        = AlgebraM[F, Id, A]
+  type Identity[A]             = A
+  type Algebra[F[_], A]        = AlgebraM[F, Identity, A]
   type AlgebraM[F[_], M[_], A] = F[A] => M[A]
   type GAlgebra[F[_], W[_], A] = F[W[A]] => A
 
-  type Coalgebra[F[_], A]        = CoalgebraM[F, Id, A]
+  type Coalgebra[F[_], A]        = CoalgebraM[F, Identity, A]
   type CoalgebraM[F[_], M[_], A] = A => F[M[A]]
 }

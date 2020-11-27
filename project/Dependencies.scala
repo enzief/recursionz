@@ -5,8 +5,8 @@ import sbt._
 object Dependencies {
 
   object CompilerPlugin {
-    val kindProjector: ModuleID = "org.typelevel" %% "kind-projector"     % "0.11.1" cross CrossVersion.full
-    val monadicFor: ModuleID    = "com.olegpy"    %% "better-monadic-for" % "0.3.1"
+    val kindProjector: ModuleID = Typelevel.kindProjector
+    val monadicFor: ModuleID    = "com.olegpy" %% "better-monadic-for" % "0.3.1"
   }
 
   object SbtPlugin {
@@ -22,17 +22,16 @@ object Dependencies {
     val scalaCheck: ModuleID = "org.scalacheck" %% "scalacheck" % "1.15.1"
   }
 
-  object Scalaz {
-    val org: String     = "org.scalaz"
-    val version: String = "7cf830e4-SNAPSHOT"
+  object Typelevel {
+    val org: String = "org.typelevel"
 
-    val core: ModuleID = org %% "scalaz-base" % version
-    val laws: ModuleID = org %% "scalaz-laws" % version
+    val kindProjector: ModuleID = org %% "kind-projector" % "0.11.1" cross CrossVersion.full
 
-    object Testz {
-      val version: String = "0.0.5"
+    object Cats {
+      def version: String = "2.3.0"
 
-      val testz: ModuleID = "org.scalaz" %% "testz-stdlib" % version
+      def core: ModuleID   = org %% "cats-core"   % version
+      def kernel: ModuleID = org %% "cats-kernel" % version
     }
   }
 }

@@ -1,12 +1,9 @@
 package enzief
 
-import scala.sys.process._
-import scala.util._
-
-import de.heikoseeberger.sbtheader.FileType
-import de.heikoseeberger.sbtheader.HeaderPlugin, HeaderPlugin.autoImport._
-import sbt._
+import de.heikoseeberger.sbtheader.HeaderPlugin.autoImport._
+import de.heikoseeberger.sbtheader.{FileType, HeaderPlugin}
 import sbt.Keys._
+import sbt._
 import sbtdynver.DynVerPlugin
 import scalafix.sbt.ScalafixPlugin.autoImport._
 
@@ -31,7 +28,7 @@ object ProjectPlugin extends AutoPlugin {
         addCompilerPlugin(Dependencies.CompilerPlugin.kindProjector),
         addCompilerPlugin(Dependencies.CompilerPlugin.monadicFor),
         addCompilerPlugin(scalafixSemanticdb("4.4.0")),
-        scalacOptions ++= commonScalacOptions ++ scalacOptionsFor212 ++ semanticdbOptions
+        scalacOptions ++= commonScalacOptions ++ optOptions ++ semanticdbOptions(target.value),
       )
 
   private lazy val headerSettings: Seq[Def.Setting[_]] = Seq(
@@ -63,9 +60,9 @@ object ProjectPlugin extends AutoPlugin {
   )
 
   // See https://docs.scala-lang.org/overviews/compiler-options/index.html
-  private lazy val optOptions: Seq[String] =
-    if (sys.env.contains("HELM_VERSION")) {
-      Seq(
+  private lazy val optOptions: List[String] =
+    if (sys.env.contains("HELM_VERSION"))
+      List(
         "-opt:box-unbox",
         "-opt:closure-invocations",
         "-opt:compact-locals",
@@ -77,46 +74,26 @@ object ProjectPlugin extends AutoPlugin {
         "-opt-warnings:_",
         "-opt:l:inline",
         "-opt:l:method",
-        "-opt-inline-from:enzief.**:scalaz.**",
+        "-opt-inline-from:cats.**:scalaz.**",
         "-Yopt-inline-heuristics:everything",
         "-Yopt-log-inline"
       )
-    } else {
-      Seq.empty
-    }
+    else
+      Nil
 
-  private lazy val scalacOptionsFor212: Seq[String] =
-    Seq(
-      "-Xlint:constant",
-      "-Ywarn-extra-implicit",
-      "-Ywarn-unused:implicits",
-      "-Ywarn-unused:imports",
-      "-Ywarn-unused:locals",
-      "-Ywarn-unused:params",
-      "-Ywarn-unused:patvars",
-      "-Ywarn-unused:privates"
-    ) ++ optOptions
-
-  private lazy val commonScalacOptions: Seq[String] =
-    Seq(
+  private lazy val commonScalacOptions: List[String] =
+    List(
       "-deprecation",
-      "-encoding",
-      "utf-8",
-      "-explaintypes",
-      "-feature",
       "-language:existentials",
-      "-language:higherKinds",
       "-language:implicitConversions",
-      "-unchecked",
-      "-Xfuture",
       "-Xlint:adapted-args",
-      "-Xlint:by-name-right-associative",
       "-Xlint:delayedinit-select",
+      "-Xlint:deprecation",
       "-Xlint:doc-detached",
       "-Xlint:inaccessible",
       "-Xlint:infer-any",
       "-Xlint:missing-interpolator",
-      "-Xlint:nullary-override",
+      "-Xlint:nonlocal-return",
       "-Xlint:nullary-unit",
       "-Xlint:option-implicit",
       "-Xlint:package-object-classes",
@@ -124,22 +101,23 @@ object ProjectPlugin extends AutoPlugin {
       "-Xlint:private-shadow",
       "-Xlint:stars-align",
       "-Xlint:type-parameter-shadow",
-      "-Xlint:unsound-match",
-      "-Yno-adapted-args",
-      "-Yno-imports",
-      "-Ypartial-unification",
+      "-Xlint:unused",
+      "-Xlint:valpattern",
+      "-Ybackend-parallelism",
+      "8",
+      "-Ymacro-annotations",
       "-Yrangepos",
-      "-Ywarn-dead-code",
-      "-Ywarn-inaccessible",
-      "-Ywarn-infer-any",
-      "-Ywarn-nullary-override",
-      "-Ywarn-nullary-unit",
       "-Ywarn-numeric-widen",
-      "-Ywarn-value-discard"
+      "-Ywarn-unused:implicits,imports,locals,params,patvars,privates",
+      "-Ywarn-value-discard",
+      "-Yimports:java.lang,scala,scala.Predef,com.swissborg.Prelude"
     )
 
-  private lazy val semanticdbOptions: Seq[String] =
+  private def semanticdbOptions(targetroot: File): Seq[String] =
     Seq(
-      "-P:semanticdb:exclude:Macros.scala"
+      "-P:semanticdb:exclude:Macros.scala",
+      "-P:semanticdb:synthetics:on",
+      // otherwise semanticdb gets into META-INF and published
+      s"-P:semanticdb:targetroot:${targetroot / "semanticdb"}",
     )
 }

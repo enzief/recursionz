@@ -23,7 +23,7 @@ lazy val scalaz: Project = (project in file("scalaz"))
     publishArtifact in makePom := true,
     publishArtifact := true,
     libraryDependencies ++= Seq(
-      Scalaz.core
+      Typelevel.Cats.core
     )
   )
 
@@ -49,8 +49,6 @@ lazy val testz: Project = (project in file("testz"))
     name := "testz",
     skip in publish := true,
     libraryDependencies ++= Seq(
-      Scalaz.Testz.testz,
-      Scalaz.laws,
       Testing.scalaCheck
     )
   )
