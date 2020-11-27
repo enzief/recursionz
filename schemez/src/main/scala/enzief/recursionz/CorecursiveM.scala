@@ -36,8 +36,7 @@ object CorecursiveM {
   def fromAlgebra[F[_], A](
       f: Algebra[F, A]
   )(
-      implicit
-      F: Traversable[F]
+      implicit F: Traversable[F]
   ): CorecursiveM[F, A] =
     new RecursionzM[F] with CorecursiveM[F, A] {
       val R: Corecursive[F, A] = Corecursive.fromAlgebra[F, A](f)
@@ -45,8 +44,7 @@ object CorecursiveM {
 
   /** Makes a `CorecursiveM[F, T[F]` out of traversable `F` and corecursiveT `T` */
   def fromT[T[_[_]], F[_]](T: CorecursiveT[T, F])(
-      implicit
-      F: Traversable[F]
+      implicit F: Traversable[F]
   ): CorecursiveM[F, T[F]] =
     new RecursionzM[F] with CorecursiveM[F, T[F]] {
       val R: Corecursive[F, T[F]] = Corecursive.fromT[T, F](T)

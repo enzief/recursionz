@@ -5,7 +5,6 @@ import scala.util._
 
 import de.heikoseeberger.sbtheader.FileType
 import de.heikoseeberger.sbtheader.HeaderPlugin, HeaderPlugin.autoImport._
-import org.scalastyle.sbt.ScalastylePlugin.autoImport.scalastyleConfig
 import sbt._
 import sbt.Keys._
 import sbtdynver.DynVerPlugin
@@ -19,49 +18,48 @@ object ProjectPlugin extends AutoPlugin {
 
   override val buildSettings: Seq[Def.Setting[_]] = Seq(
     scalafixDependencies += Dependencies.scaluzzi,
-    organization     := "enzief",
-    scalaVersion     := "2.12.8",
-    scalastyleConfig := file(".scalastyle-config.xml")
+    organization := "enzief",
+    scalaVersion := "2.13.4",
   )
 
   override val projectSettings: Seq[Def.Setting[_]] =
     headerSettings ++
-    Seq(
-      conflictManager           := ConflictManager.strict,
-      dependencyOverrides       := DependencyOverrides.settings,
-      autoAPIMappings in Global := true,
-      addCompilerPlugin(Dependencies.CompilerPlugin.kindProjector),
-      addCompilerPlugin(Dependencies.CompilerPlugin.monadicFor),
-      addCompilerPlugin(scalafixSemanticdb("4.1.10")),
-      scalacOptions ++= commonScalacOptions ++ scalacOptionsFor212 ++ semanticdbOptions
-    )
+      Seq(
+        conflictManager := ConflictManager.strict,
+        dependencyOverrides := DependencyOverrides.settings,
+        autoAPIMappings in Global := true,
+        addCompilerPlugin(Dependencies.CompilerPlugin.kindProjector),
+        addCompilerPlugin(Dependencies.CompilerPlugin.monadicFor),
+        addCompilerPlugin(scalafixSemanticdb("4.4.0")),
+        scalacOptions ++= commonScalacOptions ++ scalacOptionsFor212 ++ semanticdbOptions
+      )
 
   private lazy val headerSettings: Seq[Def.Setting[_]] = Seq(
     startYear := Some(2018),
-    licenses  := Nil,
+    licenses := Nil,
     headerLicense := Some(
-        HeaderLicense.Custom(
-          """Copyright (c) 2019 Yui Pham.
-            |
-            |Licensed under the Apache License, Version 2.0 (the "License");
-            |you may not use this file except in compliance with the License.
-            |You may obtain a copy of the License at
-            |
-            |http://www.apache.org/licenses/LICENSE-2.0
-            |
-            |Unless required by applicable law or agreed to in writing, software
-            |"distributed under the License is distributed on an "AS IS" BASIS,
-            |WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-            |See the License for the specific language governing permissions and
-            |limitations under the License.
-            |""".stripMargin
-        )
-      ),
-    headerMappings := headerMappings.value ++ Map(
-        FileType("sbt")      -> HeaderCommentStyle.cppStyleLineComment,
-        HeaderFileType.java  -> HeaderCommentStyle.cppStyleLineComment,
-        HeaderFileType.scala -> HeaderCommentStyle.cppStyleLineComment
+      HeaderLicense.Custom(
+        """Copyright (c) 2019 Yui Pham.
+          |
+          |Licensed under the Apache License, Version 2.0 (the "License");
+          |you may not use this file except in compliance with the License.
+          |You may obtain a copy of the License at
+          |
+          |http://www.apache.org/licenses/LICENSE-2.0
+          |
+          |Unless required by applicable law or agreed to in writing, software
+          |"distributed under the License is distributed on an "AS IS" BASIS,
+          |WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+          |See the License for the specific language governing permissions and
+          |limitations under the License.
+          |""".stripMargin
       )
+    ),
+    headerMappings := headerMappings.value ++ Map(
+      FileType("sbt")      -> HeaderCommentStyle.cppStyleLineComment,
+      HeaderFileType.java  -> HeaderCommentStyle.cppStyleLineComment,
+      HeaderFileType.scala -> HeaderCommentStyle.cppStyleLineComment
+    )
   )
 
   // See https://docs.scala-lang.org/overviews/compiler-options/index.html

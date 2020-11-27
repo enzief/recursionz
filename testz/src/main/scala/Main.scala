@@ -32,18 +32,16 @@ import testz.runner._
 object Main {
 
   def printReport(scope: List[String], out: Result): List[String] =
-    (out match {
+    out match {
       case _: Succeed => s"\n[${green("OK")}]" :: green(" > ") :: scope
       case _: Fail    => s"\n[${red("KO")}]" :: red(" > ") :: scope
-    })
+    }
 
   def green(s: String): String = s"$GREEN$s$RESET"
-  def red(s:   String): String = s"$RED$s$RESET"
+  def red(s: String): String   = s"$RED$s$RESET"
 
   val harness: Harness[PureHarness.Uses[Unit]] =
-    PureHarness.makeFromPrinter(
-      (ls, tr) => runner.printStrs(printReport(tr, ls), print)
-    )
+    PureHarness.makeFromPrinter((ls, tr) => runner.printStrs(printReport(tr, ls), print))
 
   def suites(harness: Harness[PureHarness.Uses[Unit]]): List[() => Future[TestOutput]] =
     tests(harness).map {
@@ -52,9 +50,9 @@ object Main {
     }
 
   def tests[T](harness: Harness[T]): List[(String, T)] =
-    "Peano"   -> PeanoTest.tests(harness) ::
-    "RawData" -> RawDataTest.tests(harness) ::
-    Nil
+    "Peano"     -> PeanoTest.tests(harness) ::
+      "RawData" -> RawDataTest.tests(harness) ::
+      Nil
 
   def main(args: Array[String]): Unit = {
     val result = Await.result(runner(suites(harness), print, global), Duration.Inf)

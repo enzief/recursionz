@@ -3,8 +3,7 @@ package enzief
 import enzief.Dependencies._
 import sbt._
 
-/**
-  * Used to manage library evictions
+/** Used to manage library evictions
   */
 object DependencyOverrides {
 

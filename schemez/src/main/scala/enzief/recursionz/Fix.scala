@@ -61,7 +61,7 @@ object Fix {
 
   def birecursiveT[F[_]](implicit F: Functor[F]): BirecursiveT[Fix, F] =
     new BirecursiveT[Fix, F] {
-      def embedT(fa:  F[Fix[F]]): Fix[F]    = Fix(fa)
-      def projectT(a: Fix[F]):    F[Fix[F]] = impl.unfix(a)
+      def embedT(fa: F[Fix[F]]): Fix[F]  = Fix(fa)
+      def projectT(a: Fix[F]): F[Fix[F]] = impl.unfix(a)
     }
 }

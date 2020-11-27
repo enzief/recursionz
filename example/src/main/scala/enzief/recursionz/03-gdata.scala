@@ -27,12 +27,12 @@ import enzief.recursionz.typeclass.syntax._
 
 sealed trait RawData[A]
 case class RawObj[A](fields: Map[String, A]) extends RawData[A]
-case class RawList[A](elems: List[A]) extends RawData[A]
-case class RawInt[A](x:      Int) extends RawData[A]
-case class RawLong[A](x:     Long) extends RawData[A]
-case class RawFloat[A](x:    Float) extends RawData[A]
-case class RawDouble[A](x:   Double) extends RawData[A]
-case class RawString[A](x:   String) extends RawData[A]
+case class RawList[A](elems: List[A])        extends RawData[A]
+case class RawInt[A](x: Int)                 extends RawData[A]
+case class RawLong[A](x: Long)               extends RawData[A]
+case class RawFloat[A](x: Float)             extends RawData[A]
+case class RawDouble[A](x: Double)           extends RawData[A]
+case class RawString[A](x: String)           extends RawData[A]
 
 object RawData {
 
@@ -48,8 +48,7 @@ object RawData {
         }
 
       override def traverse[F[_], A, B](ta: RawData[A])(f: A => F[B])(
-          implicit
-          F: Applicative[F]
+          implicit F: Applicative[F]
       ): F[RawData[B]] =
         ta match {
           case RawObj(fields) => fields.toList.traverse(_.traverse(f)).map(_.toMap |> RawObj[B])

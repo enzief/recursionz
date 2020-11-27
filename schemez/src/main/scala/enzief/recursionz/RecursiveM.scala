@@ -36,8 +36,7 @@ object RecursiveM {
   def fromCoalgebra[F[_], A](
       cof: Coalgebra[F, A]
   )(
-      implicit
-      F: Traversable[F] // named as F is mandatory for better implicit shadowing
+      implicit F: Traversable[F] // named as F is mandatory for better implicit shadowing
   ): RecursiveM[F, A] =
     new RecursionzM[F] with RecursiveM[F, A] {
       val R: Recursive[F, A] = Recursive.fromCoalgebra[F, A](cof)
@@ -45,8 +44,7 @@ object RecursiveM {
 
   /** Makes a `RecursiveM[F, T[F]` out of traversable `F` and recursiveT `T` */
   def fromT[T[_[_]], F[_]](T: RecursiveT[T, F])(
-      implicit
-      F: Traversable[F] // named as F is mandatory for better implicit shadowing
+      implicit F: Traversable[F] // named as F is mandatory for better implicit shadowing
   ): RecursiveM[F, T[F]] =
     new RecursionzM[F] with RecursiveM[F, T[F]] {
       val R: Recursive[F, T[F]] = Recursive.fromT[T, F](T)

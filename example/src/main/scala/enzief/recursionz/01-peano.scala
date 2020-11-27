@@ -23,7 +23,7 @@ import enzief.recursionz.typeclass._
 
 sealed trait PeanoF[A]
 final case class SuccF[A](a: A) extends PeanoF[A]
-final case class ZeroF[A]() extends PeanoF[A]
+final case class ZeroF[A]()     extends PeanoF[A]
 
 object PeanoF {
 

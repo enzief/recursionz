@@ -19,19 +19,19 @@ package typeclass
 object coherent extends Coherent0
 
 trait Coherent0 extends Coherent1 {
-  implicit def applyFunctor[M[_]](implicit M:        Apply[M]):       Functor[M]     = instanceOf(M)
-  implicit def bindApply[M[_]](implicit M:           Bind[M]):        Apply[M]       = instanceOf(M)
-  implicit def monadBind[M[_]](implicit M:           Monad[M]):       Bind[M]        = instanceOf(M)
-  implicit def monadApplicative[M[_]](implicit M:    Monad[M]):       Applicative[M] = instanceOf(M)
-  implicit def monoidSemigroup[A](implicit A:        Monoid[A]):      Semigroup[A]   = instanceOf(A)
-  implicit def traversableFoldable[T[_]](implicit T: Traversable[T]): Foldable[T]    = instanceOf(T)
-  implicit def comonadCobind[F[_]](implicit F:       Comonad[F]):     Cobind[F]      = instanceOf(F)
+  implicit def applyFunctor[M[_]](implicit M: Apply[M]): Functor[M]               = instanceOf(M)
+  implicit def bindApply[M[_]](implicit M: Bind[M]): Apply[M]                     = instanceOf(M)
+  implicit def monadBind[M[_]](implicit M: Monad[M]): Bind[M]                     = instanceOf(M)
+  implicit def monadApplicative[M[_]](implicit M: Monad[M]): Applicative[M]       = instanceOf(M)
+  implicit def monoidSemigroup[A](implicit A: Monoid[A]): Semigroup[A]            = instanceOf(A)
+  implicit def traversableFoldable[T[_]](implicit T: Traversable[T]): Foldable[T] = instanceOf(T)
+  implicit def comonadCobind[F[_]](implicit F: Comonad[F]): Cobind[F]             = instanceOf(F)
 }
 
 trait Coherent1 {
 
   implicit def traversableFunctor[T[_]](implicit T: Traversable[T]): Functor[T] = instanceOf(T)
-  implicit def applicativeApply[M[_]](implicit M:   Applicative[M]): Apply[M]   = instanceOf(M)
+  implicit def applicativeApply[M[_]](implicit M: Applicative[M]): Apply[M]     = instanceOf(M)
 
   implicit def applicativeErrorApplicative[F[_], E](
       implicit F: ApplicativeError[F, E]

@@ -37,8 +37,7 @@ object Corecursive {
 
   /** Makes a `Corecursive[F, T[F]]` out of functor `F` and corecursiveT `T` */
   def fromT[T[_[_]], F[_]](T: CorecursiveT[T, F])(
-      implicit
-      F: Functor[F]
+      implicit F: Functor[F]
   ): Corecursive[F, T[F]] =
     new Recursionz[F] with Corecursive[F, T[F]] {
       def embed(fa: F[T[F]]): T[F] = T.embedT(fa)

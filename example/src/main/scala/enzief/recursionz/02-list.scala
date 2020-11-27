@@ -27,7 +27,7 @@ import enzief.recursionz.typeclass.syntax._
 
 sealed trait ListF[A, L]
 final case class ConsF[A, L](head: A, tail: L) extends ListF[A, L]
-final case class NilF[A, L]() extends ListF[A, L]
+final case class NilF[A, L]()                  extends ListF[A, L]
 
 object ListF extends LiztInstances {
 
@@ -67,8 +67,7 @@ object ListF extends LiztInstances {
         }
 
       override def traverse[F[_], L1, L2](ta: ListFA[L1])(f: L1 => F[L2])(
-          implicit
-          F: Applicative[F]
+          implicit F: Applicative[F]
       ): F[ListFA[L2]] =
         ta match {
           case ConsF(h, t) => f(t).map(ConsF(h, _))
@@ -135,7 +134,7 @@ trait LiztInstances {
   // appearently it works with 2.13.x
   import ListF.Ops
 
-  implicit def liztMonad:       Monad[Lizt]       = instanceOf(instances)
+  implicit def liztMonad: Monad[Lizt]             = instanceOf(instances)
   implicit def liztTraversable: Traversable[Lizt] = instanceOf(instances)
 
   implicit def monoid[A]: Monoid[Lizt[A]] = instanceOf {
@@ -176,8 +175,7 @@ trait LiztInstances {
         foldLeft(ma.reverse, b)((b, a) => f(a, b))
 
       override def traverse[F[_], A, B](ma: Lizt[A])(f: A => F[B])(
-          implicit
-          F: Applicative[F]
+          implicit F: Applicative[F]
       ): F[Lizt[B]] =
         ma match {
           case Fix(ConsF(a, t)) => f(a).liftA2(traverse(t)(f))(Lizt.cons)

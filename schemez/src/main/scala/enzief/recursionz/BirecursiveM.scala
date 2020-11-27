@@ -17,10 +17,7 @@ package enzief.recursionz
 import typeclass.Traversable
 import typeclass.coherent.traversableFunctor
 
-abstract class BirecursiveM[F[_], A](implicit F: Traversable[F])
-    extends RecursionzM[F]
-    with RecursiveM[F, A]
-    with CorecursiveM[F, A] {
+abstract class BirecursiveM[F[_], A](implicit F: Traversable[F]) extends RecursionzM[F] with RecursiveM[F, A] with CorecursiveM[F, A] {
 
   /** `Traversable[F]` implies `Functor[F]` so that `this` implies `Birecursive[F]`.
     */
@@ -31,11 +28,10 @@ object BirecursiveM {
   def apply[F[_], A](implicit F: BirecursiveM[F, A]): BirecursiveM[F, A] = F
 
   def fromAlgebraIso[F[_], A](
-      f:   Algebra[F, A],
+      f: Algebra[F, A],
       cof: Coalgebra[F, A]
   )(
-      implicit
-      F: Traversable[F]
+      implicit F: Traversable[F]
   ): BirecursiveM[F, A] =
     new BirecursiveM[F, A] {
       override val R: Birecursive[F, A] = Birecursive.fromAlgebraIso[F, A](f, cof)
@@ -43,8 +39,7 @@ object BirecursiveM {
 
   /** Makes a `BirecursiveM[F, T[F]]` out of traversable `F` and birecursiveT `T` */
   def fromT[T[_[_]], F[_]](T: BirecursiveT[T, F])(
-      implicit
-      F: Traversable[F]
+      implicit F: Traversable[F]
   ): BirecursiveM[F, T[F]] =
     new BirecursiveM[F, T[F]] {
       override val R: Birecursive[F, T[F]] = Birecursive.fromT[T, F](T)

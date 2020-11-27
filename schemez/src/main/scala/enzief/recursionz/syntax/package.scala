@@ -29,7 +29,7 @@ object syntax {
   implicit final class recursionzM[A](private val a: A) extends AnyVal {
 
     def hyloM[F[_], M[_]: Monad, B](
-        f:   AlgebraM[F, M, B],
+        f: AlgebraM[F, M, B],
         cof: CoalgebraM[F, M, A]
     )(
         implicit F: RecursionzM[F]
