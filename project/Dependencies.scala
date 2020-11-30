@@ -5,7 +5,7 @@ import sbt._
 object Dependencies {
 
   object CompilerPlugin {
-    val kindProjector: ModuleID = "org.typelevel" %% "kind-projector"     % "0.11.1" cross CrossVersion.full
+    val kindProjector: ModuleID = "org.typelevel" %% "kind-projector"     % "0.11.2" cross CrossVersion.full
     val monadicFor: ModuleID    = "com.olegpy"    %% "better-monadic-for" % "0.3.1"
   }
 
