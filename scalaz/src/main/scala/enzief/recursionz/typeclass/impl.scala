@@ -16,17 +16,17 @@ package enzief.recursionz
 
 package typeclass
 
-import scalaz.{tc => z}
+import _root_.{cats => z}
 
 object impl {
 
-  type Eq[A] = z.EqClass[A]
-  val Eq = z.Eq
+  type Eq[A] = z.Eq[A]
+  val Eq: z.Eq.type = z.Eq
 
-  type Functor[F[_]]     = z.FunctorClass[F]
-  type Monad[F[_]]       = z.MonadClass[F]
-  type Monoid[A]         = z.MonoidClass[A]
-  type Traversable[F[_]] = z.TraversableClass[F]
+  type Functor[F[_]]     = z.Functor[F]
+  type Monad[F[_]]       = z.Monad[F]
+  type Monoid[A]         = z.Monoid[A]
+  type Traversable[F[_]] = z.Traverse[F]
 
-  type ApplicativeError[F[_], E] = z.ApplicativeErrorClass[F, E]
+  type ApplicativeError[F[_], E] = z.ApplicativeError[F, E]
 }

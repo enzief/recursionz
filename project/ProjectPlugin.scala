@@ -16,7 +16,7 @@ object ProjectPlugin extends AutoPlugin {
   override val buildSettings: Seq[Def.Setting[_]] = Seq(
     scalafixDependencies += Dependencies.scaluzzi,
     organization := "enzief",
-    scalaVersion := "2.13.4",
+    scalaVersion := "2.13.3",
   )
 
   override val projectSettings: Seq[Def.Setting[_]] =

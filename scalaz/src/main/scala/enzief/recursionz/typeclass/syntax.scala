@@ -19,18 +19,18 @@ package typeclass
 import scala.AnyVal
 import scala.Option
 
-import scalaz.{tc => z}
+import _root_.cats.{syntax => z}
 
 object syntax
     extends z.ApplicativeSyntax
     with z.ApplySyntax
-    with z.BindSyntax
-    with z.CobindSyntax
+    with z.FlatMapSyntax
+    with z.CoflatMapSyntax
     with z.ComonadSyntax
     with z.FoldableSyntax
     with z.FunctorSyntax
-    with z.SemicategorySyntax
-    with z.TraversableSyntax
+    with z.SemigroupSyntax
+    with z.TraverseSyntax
     with z.SemigroupSyntax {
 
   implicit final class IdOps[A](private val a: A) extends AnyVal {
@@ -60,7 +60,7 @@ object syntax
 
   implicit final class TraversableOps[F[_], G[_], A](private val fga: F[G[A]]) extends AnyVal {
 
-    def sequence(implicit F: Traversable[F], G: Applicative[G]): G[F[A]] =
+    def sequence(implicit F: Traverse[F], G: Applicative[G]): G[F[A]] =
       F.sequence(fga)
   }
 }
