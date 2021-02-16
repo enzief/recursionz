@@ -19,7 +19,7 @@ object Dependencies {
   val scaluzzi: ModuleID = "com.github.vovapolu" %% "scaluzzi" % "0.1.16"
 
   object Testing {
-    val scalaCheck: ModuleID = "org.scalacheck" %% "scalacheck" % "1.15.1"
+    val scalaCheck: ModuleID = "org.scalacheck" %% "scalacheck" % "1.15.3"
   }
 
   object Scalaz {
