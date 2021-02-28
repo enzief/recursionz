@@ -16,7 +16,7 @@ object Dependencies {
     val scalafmt: ModuleID  = "org.scalameta"     % "sbt-scalafmt" % "2.4.2"
   }
 
-  val scaluzzi: ModuleID = "com.github.vovapolu" %% "scaluzzi" % "0.1.16"
+  val scaluzzi: ModuleID = "com.github.vovapolu" %% "scaluzzi" % "0.1.18"
 
   object Testing {
     val scalaCheck: ModuleID = "org.scalacheck" %% "scalacheck" % "1.15.1"
