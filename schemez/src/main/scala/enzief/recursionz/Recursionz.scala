@@ -20,11 +20,9 @@ import typeclass.syntax._
 
 class Recursionz[F[_]](implicit val F: Functor[F]) {
 
-  /** Hylomorphism - fundamental operation of recursion schemes. It recursively
-    * applies `cof` to unfold `a` into layers of `F[A]`, then recursively folds
-    * then into a `B` using `f`.
-    * It can also be seen as the (fused) composition of an anamorphism and a
-    * catamorphism that avoids building the intermediate recursive data structure.
+  /** Hylomorphism - fundamental operation of recursion schemes. It recursively applies `cof` to unfold `a` into layers of `F[A]`, then recursively folds then
+    * into a `B` using `f`. It can also be seen as the (fused) composition of an anamorphism and a catamorphism that avoids building the intermediate recursive
+    * data structure.
     */
   def hylo[A, B](a: A)(f: Algebra[F, B], cof: Coalgebra[F, A]): B =
     f(cof(a).map(hylo(_)(f, cof)))
