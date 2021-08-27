@@ -25,8 +25,8 @@ object ProjectPlugin extends AutoPlugin {
   override val projectSettings: Seq[Def.Setting[_]] =
     headerSettings ++
       Seq(
-        conflictManager := ConflictManager.strict,
-        dependencyOverrides := DependencyOverrides.settings,
+        conflictManager           := ConflictManager.strict,
+        dependencyOverrides       := DependencyOverrides.settings,
         autoAPIMappings in Global := true,
         addCompilerPlugin(Dependencies.CompilerPlugin.kindProjector),
         addCompilerPlugin(Dependencies.CompilerPlugin.monadicFor),
@@ -36,7 +36,7 @@ object ProjectPlugin extends AutoPlugin {
 
   private lazy val headerSettings: Seq[Def.Setting[_]] = Seq(
     startYear := Some(2018),
-    licenses := Nil,
+    licenses  := Nil,
     headerLicense := Some(
       HeaderLicense.Custom(
         """Copyright (c) 2019 Yui Pham.
