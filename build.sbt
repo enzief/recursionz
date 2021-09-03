@@ -18,10 +18,10 @@ lazy val scalaz: Project = (project in file("scalaz"))
   .settings(
     schemez(Compile, "main"),
     schemez(Test, "test"),
-    name := "schemez-scalaz",
-    skip in publish := false,
+    name                       := "schemez-scalaz",
+    skip in publish            := false,
     publishArtifact in makePom := true,
-    publishArtifact := true,
+    publishArtifact            := true,
     libraryDependencies ++= Seq(
       Scalaz.core
     )
@@ -38,7 +38,7 @@ lazy val eg: Project = (project in file("example"))
   .enablePlugins(ProjectPlugin)
   .dependsOn(scalaz)
   .settings(
-    name := "example",
+    name            := "example",
     skip in publish := true
   )
 
@@ -46,7 +46,7 @@ lazy val testz: Project = (project in file("testz"))
   .enablePlugins(ProjectPlugin)
   .dependsOn(eg, scalaz)
   .settings(
-    name := "testz",
+    name            := "testz",
     skip in publish := true,
     libraryDependencies ++= Seq(
       Scalaz.Testz.testz,

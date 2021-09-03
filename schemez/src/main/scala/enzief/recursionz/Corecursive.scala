@@ -44,8 +44,7 @@ object Corecursive {
     }
 }
 
-/** Special `Corecursive` for any HKT `T` that has an coalgebra `F[T[F]] => T[F]`.
-  * Eg. `Fix.apply`
+/** Special `Corecursive` for any HKT `T` that has an coalgebra `F[T[F]] => T[F]`. Eg. `Fix.apply`
   */
 trait CorecursiveT[T[_[_]], F[_]] extends Recursionz[F] { _: Recursionz[F] =>
 
