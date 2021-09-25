@@ -38,8 +38,8 @@ object Birecursive {
 }
 
 /** Special `Birecursive` for any HKT `T` that has
-  * - an algebra `T[F] => F[T[F]]`, eg: `Fix.unfix`
-  * - and an coalgebra `F[T[F]] => T[F]`, eg. `Fix.apply`
+  *   - an algebra `T[F] => F[T[F]]`, eg: `Fix.unfix`
+  *   - and an coalgebra `F[T[F]] => T[F]`, eg. `Fix.apply`
   */
 abstract class BirecursiveT[T[_[_]], F[_]](implicit F: Functor[F]) extends Recursionz[F] with RecursiveT[T, F] with CorecursiveT[T, F]
 
