@@ -30,7 +30,7 @@ object Dependencies {
     val laws: ModuleID = org %% "scalaz-laws" % version
 
     object Testz {
-      val version: String = "0.0.5"
+      val version: String = "0.0.6"
 
       val testz: ModuleID = "org.scalaz" %% "testz-stdlib" % version
     }
