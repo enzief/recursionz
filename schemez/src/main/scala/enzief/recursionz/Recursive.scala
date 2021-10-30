@@ -48,8 +48,7 @@ object Recursive {
     }
 }
 
-/** Special `Recursive` for any HKT `T` that has an algebra `T[F] => F[T[F]]`
-  * Eg: `Fix.unfix`.
+/** Special `Recursive` for any HKT `T` that has an algebra `T[F] => F[T[F]]` Eg: `Fix.unfix`.
   */
 trait RecursiveT[T[_[_]], F[_]] { _: Recursionz[F] =>
   def projectT(t: T[F]): F[T[F]]
