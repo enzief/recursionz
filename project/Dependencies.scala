@@ -12,7 +12,7 @@ object Dependencies {
   object SbtPlugin {
     val dynver: ModuleID    = "com.dwijnand"      % "sbt-dynver"   % "4.1.1"
     val sbtHeader: ModuleID = "de.heikoseeberger" % "sbt-header"   % "5.6.0"
-    val scalafix: ModuleID  = "ch.epfl.scala"     % "sbt-scalafix" % "0.9.23"
+    val scalafix: ModuleID  = "ch.epfl.scala"     % "sbt-scalafix" % "0.9.33"
     val scalafmt: ModuleID  = "org.scalameta"     % "sbt-scalafmt" % "2.4.2"
   }
 
