@@ -13,7 +13,7 @@ object Dependencies {
     val dynver: ModuleID    = "com.dwijnand"      % "sbt-dynver"   % "4.1.1"
     val sbtHeader: ModuleID = "de.heikoseeberger" % "sbt-header"   % "5.6.0"
     val scalafix: ModuleID  = "ch.epfl.scala"     % "sbt-scalafix" % "0.9.23"
-    val scalafmt: ModuleID  = "org.scalameta"     % "sbt-scalafmt" % "2.4.2"
+    val scalafmt: ModuleID  = "org.scalameta"     % "sbt-scalafmt" % "2.4.5"
   }
 
   val scaluzzi: ModuleID = "com.github.vovapolu" %% "scaluzzi" % "0.1.16"
